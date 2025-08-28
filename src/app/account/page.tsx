@@ -3,8 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User, History, Settings, MapPin, CreditCard, Bell, LogOut } from "lucide-react";
+import { User, History, Settings, MapPin, Bell, LogOut } from "lucide-react";
 import Link from "next/link";
+import { OrderTracking } from "@/components/order-tracking";
 
 // Mock data - replace with actual user data
 const userData = {
@@ -33,7 +34,7 @@ export default function AccountPage() {
         <div className="max-w-5xl mx-auto">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8">
             <div>
-              <h1 className="text-3xl md:text-4xl font-headline font-bold">Mon Espace Client</h1>
+              <h1 className="text-4xl font-headline font-bold">Mon Espace Client</h1>
               <p className="text-muted-foreground">Bienvenue, {userData.name} !</p>
             </div>
             <Button variant="ghost" asChild>
@@ -94,6 +95,8 @@ export default function AccountPage() {
             </TabsContent>
 
             <TabsContent value="orders">
+              <div className="grid gap-6">
+                <OrderTracking />
                 <Card>
                     <CardHeader>
                         <CardTitle>Historique des commandes</CardTitle>
@@ -131,6 +134,7 @@ export default function AccountPage() {
                         </div>
                     </CardContent>
                 </Card>
+              </div>
             </TabsContent>
 
             <TabsContent value="settings">
@@ -181,5 +185,3 @@ export default function AccountPage() {
     </div>
   );
 }
-
-    
