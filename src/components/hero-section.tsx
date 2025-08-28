@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from 'react';
@@ -100,17 +99,13 @@ export function HeroSection() {
           </form>
         </div>
         <div className="relative w-full h-full min-h-[400px] hidden md:flex items-center justify-center">
-            <video
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="w-full h-full object-cover rounded-lg shadow-2xl"
-                poster="https://picsum.photos/id/355/600/800"
-            >
-                <source src="https://videos.pexels.com/video-files/7578548/7578548-hd_1920_1080_25fps.mp4" type="video/mp4" />
-                Votre navigateur ne supporte pas la lecture de vidéos.
-            </video>
+            <Image
+                src="https://picsum.photos/id/355/600/800"
+                alt="Happy customer receiving laundry"
+                fill
+                className="object-cover rounded-lg shadow-2xl"
+                data-ai-hint="happy customer"
+            />
         </div>
       </div>
     </section>
