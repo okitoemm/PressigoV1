@@ -99,19 +99,15 @@ export function HeroSection() {
             )}
           </form>
         </div>
-        <div className="relative w-full h-auto hidden md:flex items-center justify-center">
-            <video
+        <div className="hidden md:flex justify-center">
+            <Image
+                src="https://picsum.photos/450/600"
+                alt="Happy customer receiving laundry"
+                width={450}
+                height={600}
                 className="rounded-lg shadow-2xl"
-                width="450"
-                height="600"
-                autoPlay
-                loop
-                muted
-                playsInline
-            >
-                <source src="https://videos.pexels.com/video-files/7578544/7578544-hd_1080_1920_25fps.mp4" type="video/mp4" />
-                Votre navigateur ne supporte pas la lecture de vidéos.
-            </video>
+                data-ai-hint="happy customer"
+            />
         </div>
       </div>
     </section>
