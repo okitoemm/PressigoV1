@@ -29,6 +29,7 @@ export default function LoginPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [activeTab, setActiveTab] = useState("login");
 
   const loginForm = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -55,14 +56,14 @@ export default function LoginPage() {
     console.log("Register data:", values);
     toast({ title: "Inscription réussie", description: "Votre compte a été créé. Vous pouvez maintenant vous connecter." });
     setTimeout(() => {
-      // For demonstration, we redirect to login. In a real app, you might auto-login.
-      window.location.reload(); // To switch to login tab
+      setIsSubmitting(false);
+      setActiveTab("login");
     }, 1000);
   };
 
   return (
     <div className="container mx-auto px-4 md:px-6 py-12 md:py-16 flex items-center justify-center min-h-[80vh]">
-      <Tabs defaultValue="login" className="w-full max-w-md">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full max-w-md">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="login">Se connecter</TabsTrigger>
           <TabsTrigger value="register">S'inscrire</TabsTrigger>
@@ -170,3 +171,5 @@ export default function LoginPage() {
     </div>
   );
 }
+
+    
