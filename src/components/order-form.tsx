@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -61,12 +62,19 @@ const stepThreeSchema = z.object({
   deliveryDate: z.date({ required_error: "Veuillez sélectionner une date de livraison." }),
   deliverySlot: z.string({ required_error: "Veuillez sélectionner un créneau de livraison." }),
   whatsappConfirm: z.boolean().default(false),
-}).refine(data => data.deliveryDate > data.pickupDate, {
-    message: "La date de livraison doit être postérieure à la date de collecte.",
-    path: ["deliveryDate"],
 });
 
-const formSchema = stepOneSchema.merge(stepTwoSchema).merge(stepThreeSchema);
+const formSchema = z.intersection(stepOneSchema, stepTwoSchema).pipe(z.intersection(stepThreeSchema))
+  .refine(data => {
+    if (data.pickupDate && data.deliveryDate) {
+        return data.deliveryDate > data.pickupDate;
+    }
+    return true;
+  }, {
+    message: "La date de livraison doit être postérieure à la date de collecte.",
+    path: ["deliveryDate"],
+  });
+
 
 type FormValues = z.infer<typeof formSchema>;
 
