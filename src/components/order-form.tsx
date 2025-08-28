@@ -161,11 +161,11 @@ export function OrderForm() {
                 </Button>
               ) : <div />}
               {step < 4 ? (
-                <Button type="button" onClick={handleNext} className="bg-accent hover:bg-accent/90">
+                <Button type="button" onClick={handleNext}>
                   Suivant
                 </Button>
               ) : (
-                <Button type="submit" className="bg-primary hover:bg-primary/90">
+                <Button type="submit">
                   Confirmer la commande
                 </Button>
               )}

@@ -49,7 +49,7 @@ export default function OrderSuccessPage({ params }: SuccessPageProps) {
             <p>Vous recevrez également des notifications par WhatsApp si vous avez choisi cette option.</p>
           </div>
 
-          <Button asChild className="w-full bg-accent hover:bg-accent/90">
+          <Button asChild className="w-full">
             <Link href="/">Retour à l'accueil</Link>
           </Button>
         </CardContent>

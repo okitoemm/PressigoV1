@@ -20,7 +20,7 @@ export function Header() {
     <header className="bg-card/80 backdrop-blur-lg sticky top-0 z-40 border-b">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
         <Link href="/" className="flex items-center gap-2 font-bold text-xl text-primary">
-          <WashingMachine className="h-7 w-7 text-accent" />
+          <WashingMachine className="h-7 w-7 text-primary" />
           <span className="font-headline">LAVOO Express</span>
         </Link>
 
@@ -33,7 +33,7 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-4">
-          <Button asChild className="hidden md:flex bg-accent hover:bg-accent/90">
+          <Button asChild className="hidden md:flex">
             <Link href="/order">Passer une commande</Link>
           </Button>
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -46,7 +46,7 @@ export function Header() {
             <SheetContent side="right" className="w-[300px] sm:w-[400px]">
               <div className="p-6">
                 <Link href="/" className="flex items-center gap-2 mb-8 font-bold text-xl text-primary">
-                  <WashingMachine className="h-7 w-7 text-accent" />
+                  <WashingMachine className="h-7 w-7 text-primary" />
                   <span className="font-headline">LAVOO Express</span>
                 </Link>
                 <nav className="flex flex-col gap-6 text-lg font-medium">
@@ -56,7 +56,7 @@ export function Header() {
                     </Link>
                   ))}
                 </nav>
-                <Button asChild className="w-full mt-8 bg-accent hover:bg-accent/90" onClick={() => setIsOpen(false)}>
+                <Button asChild className="w-full mt-8" onClick={() => setIsOpen(false)}>
                   <Link href="/order">Passer une commande</Link>
                 </Button>
               </div>

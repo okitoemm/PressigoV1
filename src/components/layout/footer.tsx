@@ -7,7 +7,7 @@ export function Footer() {
       <div className="container mx-auto py-8 px-4 md:px-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-2">
-            <WashingMachine className="h-7 w-7 text-accent" />
+            <WashingMachine className="h-7 w-7 text-primary" />
             <span className="font-headline font-bold text-xl text-primary">LAVOO Express</span>
           </div>
           <p className="text-sm text-muted-foreground">
