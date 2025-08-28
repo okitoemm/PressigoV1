@@ -105,7 +105,7 @@ export function HeroSection() {
                 alt="Happy customer receiving laundry"
                 width={400}
                 height={550}
-                className="rounded-lg shadow-2xl"
+                className="rounded-lg"
                 data-ai-hint="happy customer"
             />
         </div>
