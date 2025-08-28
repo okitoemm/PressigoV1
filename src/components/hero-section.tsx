@@ -101,9 +101,9 @@ export function HeroSection() {
         </div>
         <div className="relative w-full h-[400px] md:h-full hidden md:block">
           <Image
-            src="https://picsum.photos/id/1062/600/800"
-            alt="Femme souriante tenant du linge propre"
-            data-ai-hint="woman smiling laundry"
+            src="https://picsum.photos/id/355/600/800"
+            alt="Client satisfait recevant son colis de linge propre"
+            data-ai-hint="happy customer delivery"
             fill
             className="object-cover rounded-2xl shadow-2xl"
             priority
