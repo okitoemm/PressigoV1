@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -100,10 +101,10 @@ export function HeroSection() {
         </div>
         <div className="hidden md:flex justify-center">
             <Image
-                src="/images/imagehero/imagehero1.png"
+                src="/imagehero1.png"
                 alt="Happy customer receiving laundry"
-                width={450}
-                height={620}
+                width={550}
+                height={550}
                 className="rounded-lg"
                 data-ai-hint="happy customer"
             />
