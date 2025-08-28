@@ -17,37 +17,37 @@ export default function Home() {
 
       <ReviewCarousel />
 
-      <section id="how-it-works" className="py-16 md:py-24">
+      <section id="how-it-works" className="py-16 md:py-24 bg-[#313f95] text-white">
         <div className="container mx-auto px-4 md:px-6">
           <h2 className="text-3xl md:text-4xl font-headline font-bold text-center mb-12">Comment ça marche ?</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
             <div className="flex flex-col items-center">
-              <div className="bg-secondary rounded-full p-4 mb-4">
-                <TShirtIcon className="w-10 h-10 text-primary" />
+              <div className="bg-white/10 rounded-full p-4 mb-4">
+                <TShirtIcon className="w-10 h-10 text-white" />
               </div>
               <h3 className="text-xl font-semibold mb-2">1. Commandez</h3>
-              <p className="text-muted-foreground">Sélectionnez vos articles et choisissez un créneau de ramassage.</p>
+              <p className="text-white/80">Sélectionnez vos articles et choisissez un créneau de ramassage.</p>
             </div>
             <div className="flex flex-col items-center">
-              <div className="bg-secondary rounded-full p-4 mb-4">
-                <Truck className="w-10 h-10 text-primary" />
+              <div className="bg-white/10 rounded-full p-4 mb-4">
+                <Truck className="w-10 h-10 text-white" />
               </div>
               <h3 className="text-xl font-semibold mb-2">2. On collecte</h3>
-              <p className="text-muted-foreground">Nous venons chercher votre linge directement à votre porte.</p>
+              <p className="text-white/80">Nous venons chercher votre linge directement à votre porte.</p>
             </div>
             <div className="flex flex-col items-center">
-              <div className="bg-secondary rounded-full p-4 mb-4">
-                <WashingMachineIcon className="w-10 h-10 text-primary" />
+              <div className="bg-white/10 rounded-full p-4 mb-4">
+                <WashingMachineIcon className="w-10 h-10 text-white" />
               </div>
               <h3 className="text-xl font-semibold mb-2">3. On nettoie</h3>
-              <p className="text-muted-foreground">Nos experts prennent soin de votre linge avec des produits de qualité.</p>
+              <p className="text-white/80">Nos experts prennent soin de votre linge avec des produits de qualité.</p>
             </div>
             <div className="flex flex-col items-center">
-              <div className="bg-secondary rounded-full p-4 mb-4">
-                <Sparkles className="w-10 h-10 text-primary" />
+              <div className="bg-white/10 rounded-full p-4 mb-4">
+                <Sparkles className="w-10 h-10 text-white" />
               </div>
               <h3 className="text-xl font-semibold mb-2">4. On livre</h3>
-              <p className="text-muted-foreground">Recevez votre linge propre et frais, prêt à être porté.</p>
+              <p className="text-white/80">Recevez votre linge propre et frais, prêt à être porté.</p>
             </div>
           </div>
         </div>
