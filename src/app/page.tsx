@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Sparkles, Truck } from 'lucide-react';
+import { Sparkles, Truck, Star } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { WashingMachineIcon } from '@/components/icons/washing-machine-icon';
@@ -11,25 +11,36 @@ import { JacketIcon } from '@/components/icons/jacket-icon';
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <section className="relative w-full h-[60vh] md:h-[80vh] flex items-center justify-center text-center text-white">
-        <Image
-          src="https://picsum.photos/1600/900"
-          alt="Linge propre et plié"
-          data-ai-hint="laundry clean"
-          fill
-          className="object-cover -z-10 brightness-50"
-          priority
-        />
-        <div className="px-4 md:px-6">
-          <h1 className="text-4xl md:text-6xl font-headline font-bold tracking-tighter mb-4">
-            Votre pressing, livré à votre porte.
-          </h1>
-          <p className="max-w-[700px] mx-auto text-lg md:text-xl text-neutral-200 mb-8">
-            Simple, rapide et efficace. LAVOO Express prend soin de votre linge pour que vous puissiez profiter de votre temps.
-          </p>
-          <Button size="lg" asChild className="bg-primary hover:bg-primary/90 text-primary-foreground">
-            <Link href="/order">Passer une commande</Link>
-          </Button>
+      <section className="w-full bg-primary text-primary-foreground">
+        <div className="container mx-auto px-4 md:px-6 grid md:grid-cols-2 items-center gap-8 min-h-[70vh] md:min-h-[80vh]">
+          <div className="flex flex-col items-start text-left space-y-4">
+            <h1 className="text-4xl md:text-6xl font-headline font-bold tracking-tighter">
+              Service de laverie & pressing en 24h
+            </h1>
+            <p className="text-lg md:text-xl text-primary-foreground/90">
+              sur la base de plus de 200 000 avis dans 14 pays
+            </p>
+            <div className="flex items-center gap-1">
+              <Star className="w-6 h-6 text-yellow-300 fill-yellow-300" />
+              <Star className="w-6 h-6 text-yellow-300 fill-yellow-300" />
+              <Star className="w-6 h-6 text-yellow-300 fill-yellow-300" />
+              <Star className="w-6 h-6 text-yellow-300 fill-yellow-300" />
+              <Star className="w-6 h-6 text-yellow-300 fill-yellow-300" />
+            </div>
+            <Button size="lg" asChild className="bg-white text-primary hover:bg-white/90 mt-4">
+              <Link href="/order">Réservez dès maintenant</Link>
+            </Button>
+          </div>
+          <div className="relative w-full h-[400px] md:h-[500px]">
+            <Image
+              src="https://picsum.photos/600/700"
+              alt="Femme souriante tenant du linge propre"
+              data-ai-hint="woman holding laundry"
+              fill
+              className="object-contain"
+              priority
+            />
+          </div>
         </div>
       </section>
 
