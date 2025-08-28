@@ -101,7 +101,7 @@ export function HeroSection() {
         </div>
         <div className="hidden md:flex justify-center">
             <Image
-                src="https://picsum.photos/450/600"
+                src="/imagehero1.png"
                 alt="Happy customer receiving laundry"
                 width={450}
                 height={600}
