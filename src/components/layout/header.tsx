@@ -1,10 +1,11 @@
+
 "use client";
 
 import Link from 'next/link';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, WashingMachine } from 'lucide-react';
+import { Menu, WashingMachine, User } from 'lucide-react';
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,7 +33,13 @@ export function Header() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
+           <Button variant="ghost" size="icon" asChild>
+            <Link href="/account">
+              <User className="h-5 w-5" />
+              <span className="sr-only">Compte</span>
+            </Link>
+          </Button>
           <Button asChild className="hidden md:flex">
             <Link href="/order">Passer une commande</Link>
           </Button>
@@ -55,6 +62,9 @@ export function Header() {
                       {link.label}
                     </Link>
                   ))}
+                   <Link href="/login" onClick={() => setIsOpen(false)} className="hover:text-primary transition-colors">
+                      Se connecter
+                    </Link>
                 </nav>
                 <Button asChild className="w-full mt-8" onClick={() => setIsOpen(false)}>
                   <Link href="/order">Passer une commande</Link>

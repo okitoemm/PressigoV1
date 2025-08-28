@@ -35,7 +35,7 @@ import { TShirtIcon } from "@/components/icons/t-shirt-icon";
 import { TrousersIcon } from "@/components/icons/trousers-icon";
 import { JacketIcon } from "@/components/icons/jacket-icon";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Terminal } from "lucide-react";
+import { Terminal, Eye, EyeOff } from "lucide-react";
 
 const stepOneSchema = z.object({
   name: z.string().min(2, { message: "Le nom est requis." }),
@@ -43,6 +43,16 @@ const stepOneSchema = z.object({
   phone: z.string().min(10, { message: "Numéro de téléphone invalide." }),
   address: z.string().min(5, { message: "L'adresse est requise." }),
   zipCode: z.string().length(5, { message: "Le code postal doit comporter 5 chiffres." }),
+  createAccount: z.boolean().default(true),
+  password: z.string().optional(),
+}).refine(data => {
+    if (data.createAccount && (!data.password || data.password.length < 8)) {
+        return false;
+    }
+    return true;
+}, {
+    message: "Le mot de passe doit contenir au moins 8 caractères.",
+    path: ["password"],
 });
 
 const stepTwoSchema = z.object({
@@ -65,7 +75,7 @@ const stepThreeSchema = z.object({
   whatsappConfirm: z.boolean().default(false),
 });
 
-const formSchema = stepOneSchema.merge(stepTwoSchema).merge(stepThreeSchema)
+const formSchema = z.intersection(z.intersection(stepOneSchema, stepTwoSchema), stepThreeSchema)
   .refine(data => {
     if (data.pickupDate && data.deliveryDate) {
         return data.deliveryDate > data.pickupDate;
@@ -101,6 +111,8 @@ export function OrderForm() {
       phone: "",
       address: "",
       zipCode: "",
+      createAccount: true,
+      password: "",
       items: clothingItems.map(item => ({ ...item, quantity: 0 })),
       stainRemoval: false,
       delicateWash: false,
@@ -110,8 +122,13 @@ export function OrderForm() {
   });
 
   const handleNext = async () => {
-    let fieldsToValidate: (keyof FormValues)[] | undefined = undefined;
-    if (step === 1) fieldsToValidate = ["name", "email", "phone", "address", "zipCode"];
+    let fieldsToValidate: (keyof FormValues)[] = [];
+    if (step === 1) {
+      fieldsToValidate = ["name", "email", "phone", "address", "zipCode"];
+      if(form.getValues("createAccount")) {
+        fieldsToValidate.push("password");
+      }
+    }
     if (step === 2) fieldsToValidate = ["items"];
     if (step === 3) fieldsToValidate = ["pickupDate", "pickupSlot", "deliveryDate", "deliverySlot"];
 
@@ -136,8 +153,12 @@ export function OrderForm() {
   const handleBack = () => setStep((prev) => prev - 1);
   
   const onSubmit = (data: FormValues) => {
-    const orderId = `LAVOO-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
-    router.push(`/order/success/${orderId}`);
+    console.log("Order submitted", data);
+    toast({
+        title: "Commande confirmée !",
+        description: "Votre compte a été créé. Vous allez être redirigé.",
+    });
+    router.push(`/account`);
   };
 
   const progressValue = (step / 4) * 100;
@@ -149,7 +170,7 @@ export function OrderForm() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <AnimatePresence mode="wait">
-              {step === 1 && <StepOneContent control={form.control} />}
+              {step === 1 && <StepOneContent form={form} />}
               {step === 2 && <StepTwoContent form={form} />}
               {step === 3 && <StepThreeContent form={form} />}
               {step === 4 && <StepFourContent values={form.getValues()} />}
@@ -167,7 +188,7 @@ export function OrderForm() {
                 </Button>
               ) : (
                 <Button type="submit">
-                  Confirmer la commande
+                  Confirmer et créer mon compte
                 </Button>
               )}
             </div>
@@ -185,7 +206,11 @@ const motionProps = {
   transition: { duration: 0.3 },
 };
 
-function StepOneContent({ control }: { control: any }) {
+function StepOneContent({ form }: { form: any }) {
+  const { control, watch } = form;
+  const createAccount = watch("createAccount");
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <motion.div {...motionProps} className="space-y-4">
       <h3 className="text-xl font-semibold">Vos informations</h3>
@@ -226,6 +251,28 @@ function StepOneContent({ control }: { control: any }) {
           <FormMessage />
         </FormItem>
       )} />
+       <FormField control={control} name="createAccount" render={({ field }) => (
+        <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4">
+            <FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl>
+            <div className="space-y-1 leading-none">
+                <FormLabel>Créer un compte pour suivre mes commandes</FormLabel>
+            </div>
+        </FormItem>
+      )} />
+      {createAccount && (
+        <FormField control={control} name="password" render={({ field }) => (
+            <FormItem>
+                <FormLabel>Mot de passe</FormLabel>
+                <div className="relative">
+                    <FormControl><Input type={showPassword ? "text" : "password"} placeholder="8+ caractères" {...field} /></FormControl>
+                    <Button type="button" variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7" onClick={() => setShowPassword(!showPassword)}>
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </Button>
+                </div>
+                <FormMessage />
+            </FormItem>
+        )} />
+      )}
     </motion.div>
   );
 }
@@ -321,7 +368,7 @@ function StepFourContent({ values }: { values: FormValues }) {
         <Terminal className="h-4 w-4" />
         <AlertTitle>Veuillez vérifier vos informations</AlertTitle>
         <AlertDescription>
-          Une fois la commande confirmée, vous ne pourrez plus la modifier.
+          Une fois la commande confirmée, votre compte sera créé et vous ne pourrez plus la modifier.
         </AlertDescription>
       </Alert>
       <div className="space-y-4 rounded-md border p-4 bg-secondary/50">
@@ -335,5 +382,3 @@ function StepFourContent({ values }: { values: FormValues }) {
     </motion.div>
   );
 }
-
-    

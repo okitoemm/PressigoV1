@@ -1,6 +1,7 @@
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Sparkles, Truck, Star } from 'lucide-react';
+import { Sparkles, Truck, Star, User } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { WashingMachineIcon } from '@/components/icons/washing-machine-icon';
@@ -27,9 +28,17 @@ export default function Home() {
               <Star className="w-6 h-6 text-yellow-300 fill-yellow-300" />
               <Star className="w-6 h-6 text-yellow-300 fill-yellow-300" />
             </div>
-            <Button size="lg" asChild className="bg-white text-primary hover:bg-white/90 mt-4 font-bold text-lg">
-              <Link href="/order">Réservez dès maintenant</Link>
-            </Button>
+             <div className="flex flex-col sm:flex-row gap-4">
+              <Button size="lg" asChild className="bg-white text-primary hover:bg-white/90 font-bold text-lg">
+                <Link href="/order">Réservez dès maintenant</Link>
+              </Button>
+              <Button size="lg" variant="outline" asChild className="bg-transparent text-white border-white hover:bg-white hover:text-primary font-bold text-lg">
+                <Link href="/login">
+                  <User className="mr-2 h-5 w-5" />
+                  Se connecter
+                </Link>
+              </Button>
+            </div>
           </div>
           <div className="relative w-full h-[400px] md:h-full hidden md:block">
             <Image
@@ -137,3 +146,4 @@ export default function Home() {
     </div>
   );
 }
+

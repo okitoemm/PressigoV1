@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PartyPopper } from "lucide-react";
@@ -50,7 +51,7 @@ export default function OrderSuccessPage({ params }: SuccessPageProps) {
           </div>
 
           <Button asChild className="w-full">
-            <Link href="/">Retour à l'accueil</Link>
+            <Link href="/account">Voir mon compte</Link>
           </Button>
         </CardContent>
       </Card>
