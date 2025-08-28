@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -98,11 +99,12 @@ export function HeroSection() {
             )}
           </form>
         </div>
-        <div className="relative w-full h-full min-h-[400px] hidden md:flex items-center justify-center">
+        <div className="relative w-full h-auto hidden md:flex items-center justify-center">
             <Image
-                src="https://picsum.photos/id/355/600/800"
+                src="https://picsum.photos/id/355/450/600"
                 alt="Happy customer receiving laundry"
-                fill
+                width={450}
+                height={600}
                 className="object-cover rounded-lg shadow-2xl"
                 data-ai-hint="happy customer"
             />
