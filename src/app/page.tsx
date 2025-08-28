@@ -1,73 +1,18 @@
 
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Sparkles, Truck, Star, User, StarHalf } from 'lucide-react';
-import Image from 'next/image';
+import { Sparkles, Truck } from 'lucide-react';
 import Link from 'next/link';
 import { WashingMachineIcon } from '@/components/icons/washing-machine-icon';
 import { TShirtIcon } from '@/components/icons/t-shirt-icon';
 import { TrousersIcon } from '@/components/icons/trousers-icon';
 import { JacketIcon } from '@/components/icons/jacket-icon';
-import { Badge } from '@/components/ui/badge';
+import { HeroSection } from '@/components/hero-section';
+import { Button } from '@/components/ui/button';
 
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <section className="w-full bg-primary text-primary-foreground">
-        <div className="container mx-auto px-4 md:px-6 grid md:grid-cols-2 items-center gap-16 py-12 md:py-24 min-h-[70vh] md:min-h-[80vh]">
-          <div className="flex flex-col items-start text-left space-y-4">
-            <Badge variant="secondary" className="bg-white/20 text-white">
-              Plateforme n°1 en France
-            </Badge>
-            <h1 className="text-4xl md:text-6xl font-headline font-bold tracking-tighter text-white">
-              Service de laverie & pressing en 24h
-            </h1>
-            <p className="text-lg md:text-xl text-white/90 max-w-md">
-              sur la base de plus de 200 000 avis dans 14 pays
-            </p>
-            <div className="flex items-center gap-4">
-                <div className="flex items-center gap-0.5">
-                    <Star className="w-5 h-5 text-yellow-300 fill-yellow-300" />
-                    <Star className="w-5 h-5 text-yellow-300 fill-yellow-300" />
-                    <Star className="w-5 h-5 text-yellow-300 fill-yellow-300" />
-                    <Star className="w-5 h-5 text-yellow-300 fill-yellow-300" />
-                    <StarHalf className="w-5 h-5 text-yellow-300 fill-yellow-300" />
-                </div>
-                <span className="font-semibold text-white">4.7/5</span>
-            </div>
-             <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" asChild className="bg-white text-primary hover:bg-white/90 font-bold text-lg">
-                <Link href="/order">Réservez dès maintenant</Link>
-              </Button>
-              <Button size="lg" variant="outline" asChild className="bg-transparent text-white border-white hover:bg-white hover:text-primary font-bold text-lg">
-                <Link href="/login">
-                  <User className="mr-2 h-5 w-5" />
-                  Se connecter
-                </Link>
-              </Button>
-            </div>
-            <div className="flex items-center gap-4 mt-2">
-              <div className="flex -space-x-2">
-                <Image className="inline-block h-8 w-8 rounded-full ring-2 ring-primary" src="https://picsum.photos/id/1027/50/50" width={32} height={32} alt="Client 1" />
-                <Image className="inline-block h-8 w-8 rounded-full ring-2 ring-primary" src="https://picsum.photos/id/1028/50/50" width={32} height={32} alt="Client 2" />
-                <Image className="inline-block h-8 w-8 rounded-full ring-2 ring-primary" src="https://picsum.photos/id/1029/50/50" width={32} height={32} alt="Client 3" />
-                <Image className="inline-block h-8 w-8 rounded-full ring-2 ring-primary" src="https://picsum.photos/id/1031/50/50" width={32} height={32} alt="Client 4" />
-              </div>
-              <p className="text-sm text-white/90">Plus de 200 000 clients satisfaits !</p>
-            </div>
-          </div>
-          <div className="relative w-full h-[400px] md:h-full hidden md:block">
-            <Image
-              src="https://picsum.photos/id/1062/600/800"
-              alt="Femme souriante tenant du linge propre"
-              data-ai-hint="woman smiling laundry"
-              fill
-              className="object-cover rounded-2xl shadow-2xl"
-              priority
-            />
-          </div>
-        </div>
-      </section>
+      <HeroSection />
 
       <section id="how-it-works" className="py-16 md:py-24">
         <div className="container mx-auto px-4 md:px-6">
