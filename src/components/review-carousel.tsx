@@ -3,53 +3,62 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 const reviews = [
   {
     name: "Sophie L.",
-    avatar: "https://picsum.photos/id/237/50/50",
+    title: "Cliente depuis 6 mois",
+    avatar: "https://picsum.photos/id/342/200/300",
     rating: 5,
     review: "Service impeccable et rapide. Mon linge est revenu plus propre que jamais ! Je recommande vivement.",
   },
   {
     name: "Marc D.",
-    avatar: "https://picsum.photos/id/238/50/50",
+    title: "Client régulier",
+    avatar: "https://picsum.photos/id/343/200/300",
     rating: 5,
     review: "Très pratique, la collecte et la livraison à domicile sont un vrai plus. Qualité au rendez-vous.",
   },
   {
     name: "Juliette P.",
-    avatar: "https://picsum.photos/id/239/50/50",
+    title: "Première commande",
+    avatar: "https://picsum.photos/id/344/200/300",
     rating: 4,
     review: "Bon service dans l'ensemble. Juste un petit retard sur la livraison, mais la qualité était parfaite.",
   },
   {
     name: "Thomas B.",
-    avatar: "https://picsum.photos/id/240/50/50",
+    title: "Client satisfait",
+    avatar: "https://picsum.photos/id/345/200/300",
     rating: 5,
     review: "LAVOO a sauvé ma chemise préférée ! Le traitement des taches est incroyablement efficace. Merci !",
   },
   {
     name: "Chloé M.",
-    avatar: "https://picsum.photos/id/241/50/50",
+    title: "Cliente fidèle",
+    avatar: "https://picsum.photos/id/346/200/300",
     rating: 5,
     review: "Enfin une solution simple pour la corvée de linge. L'application est facile à utiliser et le service client est top.",
   },
   {
     name: "Alexandre G.",
-    avatar: "https://picsum.photos/id/242/50/50",
+    title: "Abonné Express",
+    avatar: "https://picsum.photos/id/347/200/300",
     rating: 5,
     review: "Je suis client depuis 3 mois et je ne pourrais plus m'en passer. Un vrai gain de temps au quotidien.",
   },
   {
     name: "Léa R.",
-    avatar: "https://picsum.photos/id/243/50/50",
+    title: "Nouvelle cliente",
+    avatar: "https://picsum.photos/id/348/200/300",
     rating: 4,
     review: "Le repassage est parfait. Mes chemises sont impeccables. Je recommande ce service.",
   },
   {
     name: "Antoine F.",
-    avatar: "https://picsum.photos/id/244/50/50",
+    title: "Client vérifié",
+    avatar: "https://picsum.photos/id/349/200/300",
     rating: 5,
     review: "Rapide, fiable et de grande qualité. Le QR code pour le suivi est une super idée. Très satisfait.",
   },
@@ -57,29 +66,36 @@ const reviews = [
 
 const ReviewCard = ({ review }: { review: (typeof reviews)[0] }) => {
   return (
-    <Card className="w-[350px] flex-shrink-0 snap-center shadow-md border-primary/20 hover:border-primary/50 transition-colors">
-      <CardContent className="p-6">
-        <div className="flex items-center gap-4 mb-4">
-          <Avatar>
-            <AvatarImage src={review.avatar} alt={review.name} data-ai-hint="person face" />
-            <AvatarFallback>{review.name.charAt(0)}</AvatarFallback>
-          </Avatar>
-          <div>
-            <p className="font-semibold">{review.name}</p>
-            <div className="flex items-center gap-0.5">
-              {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  className={cn(
-                    "w-4 h-4",
-                    i < review.rating ? "text-yellow-400 fill-yellow-400" : "text-muted-foreground"
-                  )}
-                />
-              ))}
-            </div>
-          </div>
+    <Card className="w-[450px] flex-shrink-0 snap-center shadow-md border-primary/20 hover:border-primary/50 transition-colors">
+      <CardContent className="p-0 flex">
+        <div className="w-1/3">
+          <Image
+            src={review.avatar}
+            alt={`Avis de ${review.name}`}
+            width={150}
+            height={225}
+            className="object-cover h-full rounded-l-lg"
+            data-ai-hint="happy customer"
+          />
         </div>
-        <p className="text-sm text-muted-foreground leading-relaxed">{`"${review.review}"`}</p>
+        <div className="w-2/3 p-6 flex flex-col justify-center">
+          <h3 className="font-bold text-lg">{review.name}</h3>
+          <p className="text-sm text-muted-foreground mb-2">{review.title}</p>
+          <div className="flex items-center gap-0.5 mb-4">
+            {[...Array(5)].map((_, i) => (
+              <Star
+                key={i}
+                className={cn(
+                  "w-5 h-5",
+                  i < review.rating ? "text-primary fill-primary" : "text-muted-foreground/50"
+                )}
+              />
+            ))}
+          </div>
+          <blockquote className="text-sm text-foreground/80 leading-relaxed italic">
+            <p>&ldquo;{review.review}&rdquo;</p>
+          </blockquote>
+        </div>
       </CardContent>
     </Card>
   );
