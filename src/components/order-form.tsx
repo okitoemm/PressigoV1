@@ -49,6 +49,7 @@ const stepTwoSchema = z.object({
   items: z.array(z.object({
     id: z.string(),
     name: z.string(),
+    icon: z.any(),
     quantity: z.number().min(0),
   })).refine(items => items.some(item => item.quantity > 0), { message: "Veuillez sélectionner au moins un article." }),
   stainRemoval: z.boolean().default(false),
@@ -64,7 +65,7 @@ const stepThreeSchema = z.object({
   whatsappConfirm: z.boolean().default(false),
 });
 
-const formSchema = z.intersection(stepOneSchema, stepTwoSchema).pipe(z.intersection(stepThreeSchema))
+const formSchema = stepOneSchema.merge(stepTwoSchema).merge(stepThreeSchema)
   .refine(data => {
     if (data.pickupDate && data.deliveryDate) {
         return data.deliveryDate > data.pickupDate;
@@ -334,3 +335,5 @@ function StepFourContent({ values }: { values: FormValues }) {
     </motion.div>
   );
 }
+
+    
