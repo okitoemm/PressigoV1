@@ -1,6 +1,6 @@
 
 import Link from 'next/link';
-import { WashingMachine, Twitter, Facebook, Instagram, Mail, Phone, MapPin } from 'lucide-react';
+import { WashingMachine, Twitter, Facebook, Instagram } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
@@ -33,9 +33,9 @@ export function Footer() {
           <div>
             <h3 className="font-bold text-lg mb-4">Légal</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link href="#" className="hover:underline text-primary-foreground/80">Politique de confidentialité</Link></li>
-              <li><Link href="#" className="hover:underline text-primary-foreground/80">Conditions d'utilisation</Link></li>
-              <li><Link href="#" className="hover:underline text-primary-foreground/80">Mentions légales</Link></li>
+              <li><Link href="/privacy-policy" className="hover:underline text-primary-foreground/80">Politique de confidentialité</Link></li>
+              <li><Link href="/terms-of-service" className="hover:underline text-primary-foreground/80">Conditions d'utilisation</Link></li>
+              <li><Link href="/legal-notice" className="hover:underline text-primary-foreground/80">Mentions légales</Link></li>
             </ul>
           </div>
           
