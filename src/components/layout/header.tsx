@@ -35,9 +35,9 @@ export function Header() {
 
         <div className="flex items-center gap-2">
            <Button variant="ghost" size="icon" asChild>
-            <Link href="/account">
+            <Link href="/login">
               <User className="h-5 w-5" />
-              <span className="sr-only">Compte</span>
+              <span className="sr-only">Se connecter / Mon Compte</span>
             </Link>
           </Button>
           <Button asChild className="hidden md:flex">
