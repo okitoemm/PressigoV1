@@ -8,11 +8,14 @@ import { TrousersIcon } from '@/components/icons/trousers-icon';
 import { JacketIcon } from '@/components/icons/jacket-icon';
 import { HeroSection } from '@/components/hero-section';
 import { Button } from '@/components/ui/button';
+import { ReviewCarousel } from '@/components/review-carousel';
 
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <HeroSection />
+
+      <ReviewCarousel />
 
       <section id="how-it-works" className="py-16 md:py-24">
         <div className="container mx-auto px-4 md:px-6">
