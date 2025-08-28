@@ -57,7 +57,7 @@ const reviews = [
 
 const ReviewCard = ({ review }: { review: (typeof reviews)[0] }) => {
   return (
-    <Card className="w-[350px] flex-shrink-0 snap-center shadow-md">
+    <Card className="w-[350px] flex-shrink-0 snap-center shadow-md border-primary/20 hover:border-primary/50 transition-colors">
       <CardContent className="p-6">
         <div className="flex items-center gap-4 mb-4">
           <Avatar>
