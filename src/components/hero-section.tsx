@@ -36,30 +36,16 @@ export function HeroSection() {
     };
 
   return (
-    <section className="w-full bg-primary text-primary-foreground relative overflow-hidden">
-      <div className="absolute inset-0 z-0">
-         <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-full h-full object-cover"
-            poster="https://picsum.photos/id/355/600/800"
-          >
-            <source src="https://videos.pexels.com/video-files/7578548/7578548-hd_1920_1080_25fps.mp4" type="video/mp4" />
-            Votre navigateur ne supporte pas la lecture de vidéos.
-          </video>
-          <div className="absolute inset-0 bg-primary/70"></div>
-      </div>
-      <div className="container mx-auto px-4 md:px-6 grid md:grid-cols-2 items-center gap-16 py-12 md:py-24 min-h-[70vh] md:min-h-[80vh] relative z-10">
+    <section className="w-full bg-primary text-primary-foreground">
+      <div className="container mx-auto px-4 md:px-6 grid md:grid-cols-2 items-center gap-16 py-12 md:py-24 min-h-[70vh] md:min-h-[80vh]">
         <div className="flex flex-col items-start text-left space-y-4">
-          <Badge variant="secondary" className="bg-white/20 text-white">
+          <Badge variant="secondary">
             Plateforme n°1 en France
           </Badge>
-          <h1 className="text-4xl md:text-6xl font-headline font-bold tracking-tighter text-white">
+          <h1 className="text-4xl md:text-6xl font-headline font-bold tracking-tighter">
             Service de laverie & pressing en 24h
           </h1>
-          <p className="text-lg md:text-xl text-white/90 max-w-md">
+          <p className="text-lg md:text-xl text-primary-foreground/90 max-w-md">
             sur la base de plus de 200 000 avis dans 14 pays
           </p>
           <div className="flex items-center gap-2">
@@ -70,7 +56,7 @@ export function HeroSection() {
               <Star className="w-5 h-5 text-yellow-300 fill-yellow-300" />
               <StarHalf className="w-5 h-5 text-yellow-300 fill-yellow-300" />
             </div>
-            <span className="font-semibold text-white">4.7/5</span>
+            <span className="font-semibold">4.7/5</span>
           </div>
           <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md">
             <Button size="lg" asChild className="bg-white text-primary hover:bg-white/90 font-bold text-lg">
@@ -90,10 +76,10 @@ export function HeroSection() {
               <Image className="inline-block h-8 w-8 rounded-full ring-2 ring-primary-foreground" src="https://picsum.photos/id/1029/50/50" data-ai-hint="person face" width={32} height={32} alt="Client 3" />
               <Image className="inline-block h-8 w-8 rounded-full ring-2 ring-primary-foreground" src="https://picsum.photos/id/1031/50/50" data-ai-hint="person face" width={32} height={32} alt="Client 4" />
             </div>
-            <p className="text-sm text-white/90">Plus de 200 000 clients satisfaits !</p>
+            <p className="text-sm text-primary-foreground/90">Plus de 200 000 clients satisfaits !</p>
           </div>
           <form onSubmit={handleZipCheck} className="w-full max-w-md mt-4 p-4 bg-white/20 rounded-lg space-y-2">
-            <label className="font-semibold text-white">Vérifiez si nous livrons chez vous :</label>
+            <label className="font-semibold">Vérifiez si nous livrons chez vous :</label>
             <div className="flex items-center gap-2">
                 <Input 
                     placeholder="Entrez votre code postal" 
@@ -113,8 +99,18 @@ export function HeroSection() {
             )}
           </form>
         </div>
-        <div className="relative w-full h-[400px] md:h-full hidden md:block">
-         {/* Espace vide intentionnel, la vidéo est en fond */}
+        <div className="relative w-full h-full min-h-[400px] hidden md:flex items-center justify-center">
+            <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-full object-cover rounded-lg shadow-2xl"
+                poster="https://picsum.photos/id/355/600/800"
+            >
+                <source src="https://videos.pexels.com/video-files/7578548/7578548-hd_1920_1080_25fps.mp4" type="video/mp4" />
+                Votre navigateur ne supporte pas la lecture de vidéos.
+            </video>
         </div>
       </div>
     </section>
