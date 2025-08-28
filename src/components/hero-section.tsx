@@ -36,8 +36,22 @@ export function HeroSection() {
     };
 
   return (
-    <section className="w-full bg-primary text-primary-foreground">
-      <div className="container mx-auto px-4 md:px-6 grid md:grid-cols-2 items-center gap-16 py-12 md:py-24 min-h-[70vh] md:min-h-[80vh]">
+    <section className="w-full bg-primary text-primary-foreground relative overflow-hidden">
+      <div className="absolute inset-0 z-0">
+         <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover"
+            poster="https://picsum.photos/id/355/600/800"
+          >
+            <source src="https://videos.pexels.com/video-files/7578548/7578548-hd_1920_1080_25fps.mp4" type="video/mp4" />
+            Votre navigateur ne supporte pas la lecture de vidéos.
+          </video>
+          <div className="absolute inset-0 bg-primary/70"></div>
+      </div>
+      <div className="container mx-auto px-4 md:px-6 grid md:grid-cols-2 items-center gap-16 py-12 md:py-24 min-h-[70vh] md:min-h-[80vh] relative z-10">
         <div className="flex flex-col items-start text-left space-y-4">
           <Badge variant="secondary" className="bg-white/20 text-white">
             Plateforme n°1 en France
@@ -100,14 +114,7 @@ export function HeroSection() {
           </form>
         </div>
         <div className="relative w-full h-[400px] md:h-full hidden md:block">
-          <Image
-            src="https://picsum.photos/id/355/600/800"
-            alt="Client satisfait recevant son colis de linge propre"
-            data-ai-hint="happy customer delivery"
-            fill
-            className="object-cover rounded-2xl shadow-2xl"
-            priority
-          />
+         {/* Espace vide intentionnel, la vidéo est en fond */}
         </div>
       </div>
     </section>
