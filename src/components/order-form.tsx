@@ -154,11 +154,14 @@ export function OrderForm() {
   
   const onSubmit = (data: FormValues) => {
     console.log("Order submitted", data);
+    const orderId = `LAVOO-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+
     toast({
-        title: "Commande confirmée !",
-        description: "Votre compte a été créé. Vous allez être redirigé.",
+        title: "Commande en cours de création",
+        description: "Nous finalisons votre commande...",
     });
-    router.push(`/account`);
+
+    router.push(`/order/success/${orderId}`);
   };
 
   const progressValue = (step / 4) * 100;

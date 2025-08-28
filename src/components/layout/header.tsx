@@ -35,9 +35,9 @@ export function Header() {
 
         <div className="flex items-center gap-2">
            <Button variant="ghost" size="icon" asChild>
-            <Link href="/login">
+            <Link href="/account">
               <User className="h-5 w-5" />
-              <span className="sr-only">Se connecter / Mon Compte</span>
+              <span className="sr-only">Compte</span>
             </Link>
           </Button>
           <Button asChild className="hidden md:flex">
@@ -63,7 +63,10 @@ export function Header() {
                     </Link>
                   ))}
                    <Link href="/login" onClick={() => setIsOpen(false)} className="hover:text-primary transition-colors">
-                      Se connecter
+                      Se connecter / S'inscrire
+                    </Link>
+                     <Link href="/account" onClick={() => setIsOpen(false)} className="hover:text-primary transition-colors">
+                      Mon Compte
                     </Link>
                 </nav>
                 <Button asChild className="w-full mt-8" onClick={() => setIsOpen(false)}>
