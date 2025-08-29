@@ -59,7 +59,7 @@ export function HeroSection() {
             <span className="font-semibold">4.7/5</span>
           </div>
           <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md">
-            <Button size="lg" asChild className="bg-white text-primary hover:bg-white/90 font-bold text-lg">
+            <Button size="lg" asChild className="bg-white text-primary hover:bg-white/90 font-bold text-lg animate-breathing">
               <Link href="/order">Réservez dès maintenant</Link>
             </Button>
             <Button size="lg" variant="outline" asChild className="bg-transparent text-white border-white hover:bg-white hover:text-primary font-bold text-lg">

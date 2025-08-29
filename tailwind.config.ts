@@ -96,6 +96,10 @@ export default {
         'reverse-marquee': {
           '0%': { transform: 'translateX(-50%)' },
           '100%': { transform: 'translateX(0%)' },
+        },
+        'breathing': {
+          '0%, 100%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.05)' },
         }
       },
       animation: {
@@ -104,6 +108,7 @@ export default {
         'marquee': 'marquee var(--duration, 40s) linear infinite',
         'marquee-slow': 'marquee 120s linear infinite',
         'reverse-marquee': 'reverse-marquee var(--duration, 40s) linear infinite',
+        'breathing': 'breathing 2.5s ease-in-out infinite',
       },
     },
   },
