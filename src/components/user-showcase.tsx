@@ -62,7 +62,7 @@ const MarqueeRow = ({ users, duration, reverse = false }: { users: any[], durati
 
 export function UserShowcase() {
   const [activeUsers, setActiveUsers] = useState(1342);
-  const [shuffledRows, setShuffledRows] = useState<{ row1: any[], row2: any[], row3: any[], row4: any[] } | null>(null);
+  const [shuffledRows, setShuffledRows] = useState<{ row1: any[], row2: any[], row3: any[] } | null>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -70,17 +70,16 @@ export function UserShowcase() {
     }, 2000);
 
     setShuffledRows({
-        row1: shuffle([...users]).slice(0, 7),
-        row2: shuffle([...users]).slice(0, 7),
-        row3: shuffle([...users]).slice(0, 7),
-        row4: shuffle([...users]).slice(0, 7),
+        row1: shuffle([...users]).slice(0, 10),
+        row2: shuffle([...users]).slice(0, 10),
+        row3: shuffle([...users]).slice(0, 10),
     });
 
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <section className="py-12 md:py-20 bg-primary/5 overflow-hidden">
+    <section className="py-8 md:py-12 bg-primary/5 overflow-hidden">
       <div className="container mx-auto px-4 md:px-6 text-center">
         <h2 className="text-3xl md:text-4xl font-headline font-bold text-foreground">
           Rejoignez des milliers de clients satisfaits
@@ -93,10 +92,9 @@ export function UserShowcase() {
         <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-background z-10" />
         {shuffledRows ? (
           <>
-            <MarqueeRow users={shuffledRows.row1} duration="40s" />
-            <MarqueeRow users={shuffledRows.row2} duration="50s" reverse={true} />
-            <MarqueeRow users={shuffledRows.row3} duration="35s" />
-            <MarqueeRow users={shuffledRows.row4} duration="55s" reverse={true} />
+            <MarqueeRow users={shuffledRows.row1} duration="30s" />
+            <MarqueeRow users={shuffledRows.row2} duration="40s" reverse={true} />
+            <MarqueeRow users={shuffledRows.row3} duration="25s" />
           </>
         ) : (
             // You can render a placeholder or nothing here until the client-side shuffle is done
@@ -121,4 +119,3 @@ export function UserShowcase() {
     </section>
   );
 }
-
