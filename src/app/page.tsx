@@ -1,6 +1,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Sparkles, Truck } from 'lucide-react';
+import { Sparkles, Truck, CheckCircle, PlayCircle } from 'lucide-react';
 import Link from 'next/link';
 import { WashingMachineIcon } from '@/components/icons/washing-machine-icon';
 import { TShirtIcon } from '@/components/icons/t-shirt-icon';
@@ -9,11 +9,55 @@ import { JacketIcon } from '@/components/icons/jacket-icon';
 import { HeroSection } from '@/components/hero-section';
 import { Button } from '@/components/ui/button';
 import { ReviewCarousel } from '@/components/review-carousel';
+import Image from 'next/image';
 
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <HeroSection />
+
+      <section className="py-16 md:py-24 bg-white">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="space-y-6">
+              <h2 className="text-3xl md:text-4xl font-headline font-bold text-foreground">La qualité professionnelle, sans l'effort.</h2>
+              <p className="text-lg text-muted-foreground">
+                LAVOO Express réinvente votre routine de lessive. Nous combinons l'expertise du nettoyage professionnel avec une technologie de pointe pour vous offrir un service inégalé, directement depuis chez vous.
+              </p>
+              <ul className="space-y-4">
+                <li className="flex items-start">
+                  <CheckCircle className="w-6 h-6 text-primary mr-3 flex-shrink-0 mt-1" />
+                  <span><span className="font-semibold">Soin Expert :</span> Chaque vêtement est traité avec la plus grande attention par nos spécialistes.</span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="w-6 h-6 text-primary mr-3 flex-shrink-0 mt-1" />
+                  <span><span className="font-semibold">Simplicité Maximale :</span> Commandez en quelques clics et laissez-nous nous occuper du reste.</span>
+                </li>
+                 <li className="flex items-start">
+                  <CheckCircle className="w-6 h-6 text-primary mr-3 flex-shrink-0 mt-1" />
+                  <span><span className="font-semibold">Rapidité Garantie :</span> Votre linge propre et frais vous est retourné en 24h chrono.</span>
+                </li>
+              </ul>
+              <Button size="lg" asChild>
+                <Link href="/#services">Découvrir nos services</Link>
+              </Button>
+            </div>
+            <div className="relative rounded-lg overflow-hidden group">
+               <Image
+                  src="https://picsum.photos/800/600"
+                  alt="Présentation du service LAVOO Express"
+                  width={800}
+                  height={600}
+                  className="w-full h-auto object-cover rounded-lg transform group-hover:scale-105 transition-transform duration-300"
+                  data-ai-hint="laundry service"
+                />
+              <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                <PlayCircle className="w-20 h-20 text-white/80 group-hover:text-white transition-colors cursor-pointer" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <ReviewCarousel />
 
