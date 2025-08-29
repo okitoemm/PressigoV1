@@ -99,12 +99,12 @@ export function HeroSection() {
             )}
           </form>
         </div>
-        <div className="flex justify-center">
+        <div className="hidden md:flex justify-center">
             <Image
                 src="/imagehero1.png"
                 alt="Happy customer receiving laundry"
-                width={700}
-                height={700}
+                width={750}
+                height={750}
                 className="rounded-lg"
                 data-ai-hint="happy customer"
             />
