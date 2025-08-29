@@ -118,7 +118,7 @@ export function ReviewCarousel() {
           maskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
         }}
       >
-        <div className="flex min-w-max animate-marquee gap-6 py-4">
+        <div className="flex min-w-max animate-marquee-slow gap-6 py-4">
           {duplicatedReviews.map((review, index) => (
             <ReviewCard key={index} review={review} />
           ))}
