@@ -80,7 +80,7 @@ export function UserShowcase() {
   }, []);
 
   return (
-    <section className="py-16 md:py-24 bg-primary/5 overflow-hidden">
+    <section className="py-12 md:py-20 bg-primary/5 overflow-hidden">
       <div className="container mx-auto px-4 md:px-6 text-center">
         <h2 className="text-3xl md:text-4xl font-headline font-bold text-foreground">
           Rejoignez des milliers de clients satisfaits
@@ -93,10 +93,10 @@ export function UserShowcase() {
         <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-background z-10" />
         {shuffledRows ? (
           <>
-            <MarqueeRow users={shuffledRows.row1} duration="80s" />
-            <MarqueeRow users={shuffledRows.row2} duration="90s" reverse={true} />
-            <MarqueeRow users={shuffledRows.row3} duration="70s" />
-            <MarqueeRow users={shuffledRows.row4} duration="100s" reverse={true} />
+            <MarqueeRow users={shuffledRows.row1} duration="40s" />
+            <MarqueeRow users={shuffledRows.row2} duration="50s" reverse={true} />
+            <MarqueeRow users={shuffledRows.row3} duration="35s" />
+            <MarqueeRow users={shuffledRows.row4} duration="55s" reverse={true} />
           </>
         ) : (
             // You can render a placeholder or nothing here until the client-side shuffle is done
@@ -121,3 +121,4 @@ export function UserShowcase() {
     </section>
   );
 }
+
