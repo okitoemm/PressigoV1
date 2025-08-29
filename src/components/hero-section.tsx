@@ -101,10 +101,10 @@ export function HeroSection() {
         </div>
         <div className="hidden md:flex justify-center">
             <Image
-                src="/images/imagehero/imagehero1.png"
+                src="/imagehero1.png"
                 alt="Happy customer receiving laundry"
-                width={650}
-                height={650}
+                width={500}
+                height={500}
                 className="rounded-lg"
                 data-ai-hint="happy customer"
             />
