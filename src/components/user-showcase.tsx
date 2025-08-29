@@ -51,7 +51,7 @@ const MarqueeRow = ({ users, duration, reverse = false }: { users: any[], durati
             alt={`User ${user.id}`}
             width={128}
             height={128}
-            className="w-24 h-24 md:w-32 md:h-32 object-cover rounded-full border-4 border-white shadow-md transform transition-transform duration-300 hover:scale-110 hover:shadow-xl hover:z-10"
+            className="w-24 h-24 md:w-32 md:h-32 object-cover rounded-full border-4 border-primary shadow-md transform transition-transform duration-300 hover:scale-110 hover:shadow-xl hover:z-10"
             data-ai-hint="person face"
           />
         </div>
