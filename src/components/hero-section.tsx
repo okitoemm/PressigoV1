@@ -38,7 +38,7 @@ export function HeroSection() {
   return (
     <section className="w-full bg-primary text-primary-foreground">
       <div className="container mx-auto px-4 md:px-6 grid md:grid-cols-2 items-center gap-16 py-12 md:py-24 min-h-[70vh] md:min-h-[80vh]">
-        <div className="flex flex-col items-start text-left space-y-4">
+        <div className="flex flex-col items-center md:items-start text-center md:text-left space-y-4">
           <Badge variant="secondary">
             Plateforme n°1 en France
           </Badge>
@@ -99,12 +99,12 @@ export function HeroSection() {
             )}
           </form>
         </div>
-        <div className="hidden md:flex justify-center">
+        <div className="flex justify-center">
             <Image
                 src="/imagehero1.png"
                 alt="Happy customer receiving laundry"
-                width={550}
-                height={550}
+                width={700}
+                height={700}
                 className="rounded-lg"
                 data-ai-hint="happy customer"
             />
