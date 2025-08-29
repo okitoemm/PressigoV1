@@ -10,11 +10,14 @@ import { HeroSection } from '@/components/hero-section';
 import { Button } from '@/components/ui/button';
 import { ReviewCarousel } from '@/components/review-carousel';
 import Image from 'next/image';
+import { UserShowcase } from '@/components/user-showcase';
 
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <HeroSection />
+
+      <UserShowcase />
 
       <section className="py-16 md:py-24 bg-white">
         <div className="container mx-auto px-4 md:px-6">
