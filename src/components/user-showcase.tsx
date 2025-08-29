@@ -62,18 +62,22 @@ const MarqueeRow = ({ users, duration, reverse = false }: { users: any[], durati
 
 export function UserShowcase() {
   const [activeUsers, setActiveUsers] = useState(1342);
+  const [shuffledRows, setShuffledRows] = useState<{ row1: any[], row2: any[], row3: any[], row4: any[] } | null>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveUsers(prev => prev + Math.floor(Math.random() * 3) - 1);
     }, 2000);
+
+    setShuffledRows({
+        row1: shuffle([...users]).slice(0, 7),
+        row2: shuffle([...users]).slice(0, 7),
+        row3: shuffle([...users]).slice(0, 7),
+        row4: shuffle([...users]).slice(0, 7),
+    });
+
     return () => clearInterval(interval);
   }, []);
-
-  const row1 = shuffle([...users]).slice(0, 7);
-  const row2 = shuffle([...users]).slice(0, 7);
-  const row3 = shuffle([...users]).slice(0, 7);
-  const row4 = shuffle([...users]).slice(0, 7);
 
   return (
     <section className="py-16 md:py-24 bg-primary/5 overflow-hidden">
@@ -87,10 +91,17 @@ export function UserShowcase() {
       </div>
       <div className="relative space-y-4">
         <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-background z-10" />
-        <MarqueeRow users={row1} duration="80s" />
-        <MarqueeRow users={row2} duration="90s" reverse={true} />
-        <MarqueeRow users={row3} duration="70s" />
-        <MarqueeRow users={row4} duration="100s" reverse={true} />
+        {shuffledRows ? (
+          <>
+            <MarqueeRow users={shuffledRows.row1} duration="80s" />
+            <MarqueeRow users={shuffledRows.row2} duration="90s" reverse={true} />
+            <MarqueeRow users={shuffledRows.row3} duration="70s" />
+            <MarqueeRow users={shuffledRows.row4} duration="100s" reverse={true} />
+          </>
+        ) : (
+            // You can render a placeholder or nothing here until the client-side shuffle is done
+            null
+        )}
       </div>
       <div className="container mx-auto px-4 md:px-6 text-center mt-12">
         <div className="inline-flex items-center bg-white shadow-lg rounded-full p-2 pr-6">
