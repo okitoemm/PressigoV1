@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import { Users } from 'lucide-react';
 
 const users = [
-  { id: 101, url: 'https://picsum.photos/id/101/128/128' },
+  { id: 101, url: '/images/imagehero/imagehero1.png' },
   { id: 102, url: 'https://picsum.photos/id/102/128/128' },
   { id: 103, url: 'https://picsum.photos/id/103/128/128' },
   { id: 104, url: 'https://picsum.photos/id/104/128/128' },
@@ -70,9 +70,9 @@ export function UserShowcase() {
     }, 2000);
 
     setShuffledRows({
-        row1: shuffle([...users]).slice(0, 10),
-        row2: shuffle([...users]).slice(0, 10),
-        row3: shuffle([...users]).slice(0, 10),
+        row1: shuffle([...users]),
+        row2: shuffle([...users]),
+        row3: shuffle([...users]),
     });
 
     return () => clearInterval(interval);
