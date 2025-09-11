@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { auth, db } from "@/lib/firebase/client-app";
 import { onAuthStateChanged, signOut, User as FirebaseUser } from "firebase/auth";
-import { collection, query, where, getDocs, orderBy, addDoc } from "firebase/firestore";
+import { collection, query, where, getDocs, orderBy, addDoc, doc, updateDoc, writeBatch, deleteDoc } from "firebase/firestore";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -14,11 +14,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User, History, Settings, MapPin, Bell, LogOut, Loader2, PlusCircle } from "lucide-react";
+import { User, History, Settings, MapPin, Bell, LogOut, Loader2, PlusCircle, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { OrderTracking } from "@/components/order-tracking";
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger, } from "@/components/ui/alert-dialog"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -52,8 +53,10 @@ export default function AccountPage() {
   const [pastOrders, setPastOrders] = useState<Order[]>([]);
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isAddAddressOpen, setIsAddAddressOpen] = useState(false);
+  const [isAddressDialogOpen, setIsAddressDialogOpen] = useState(false);
   const [isSubmittingAddress, setIsSubmittingAddress] = useState(false);
+  const [editingAddress, setEditingAddress] = useState<Address | null>(null);
+
 
   const addressForm = useForm<z.infer<typeof addressSchema>>({
     resolver: zodResolver(addressSchema),
@@ -121,18 +124,69 @@ export default function AccountPage() {
     }
   };
 
+  const handleOpenAddDialog = () => {
+      setEditingAddress(null);
+      addressForm.reset({ type: "Maison", address: "", isDefault: false });
+      setIsAddressDialogOpen(true);
+  }
+
+  const handleOpenEditDialog = (address: Address) => {
+      setEditingAddress(address);
+      addressForm.reset(address);
+      setIsAddressDialogOpen(true);
+  }
+  
+  const handleDeleteAddress = async () => {
+    if (!user || !editingAddress) return;
+    try {
+      await deleteDoc(doc(db, `users/${user.uid}/addresses/${editingAddress.id}`));
+      toast({ title: "Succès", description: "L'adresse a été supprimée." });
+      await fetchAddresses(user.uid);
+      setIsAddressDialogOpen(false);
+    } catch (error) {
+      console.error("Error deleting address:", error);
+      toast({ variant: "destructive", title: "Erreur", description: "Impossible de supprimer l'adresse." });
+    }
+  };
+
+
   const onAddressSubmit = async (values: z.infer<typeof addressSchema>) => {
       if (!user) return;
       setIsSubmittingAddress(true);
       try {
-          await addDoc(collection(db, `users/${user.uid}/addresses`), values);
-          toast({ title: "Succès", description: "Votre nouvelle adresse a été ajoutée."});
+          const batch = writeBatch(db);
+
+          // If setting new default address, unset the old one
+          if (values.isDefault) {
+              const addressesQuery = query(collection(db, `users/${user.uid}/addresses`), where("isDefault", "==", true));
+              const currentDefault = await getDocs(addressesQuery);
+              currentDefault.forEach(doc => {
+                  if (doc.id !== editingAddress?.id) {
+                      batch.update(doc.ref, { isDefault: false });
+                  }
+              });
+          }
+          
+          if (editingAddress) {
+              // Update existing address
+              const addressRef = doc(db, `users/${user.uid}/addresses/${editingAddress.id}`);
+              batch.update(addressRef, values);
+              await batch.commit();
+              toast({ title: "Succès", description: "Votre adresse a été mise à jour."});
+          } else {
+              // Add new address - commit previous batch first
+              await batch.commit();
+              await addDoc(collection(db, `users/${user.uid}/addresses`), values);
+              toast({ title: "Succès", description: "Votre nouvelle adresse a été ajoutée."});
+          }
+
           await fetchAddresses(user.uid);
-          setIsAddAddressOpen(false);
+          setIsAddressDialogOpen(false);
+          setEditingAddress(null);
           addressForm.reset();
       } catch (error) {
-          console.error("Error adding address: ", error);
-          toast({ variant: "destructive", title: "Erreur", description: "Impossible d'ajouter l'adresse." });
+          console.error("Error saving address: ", error);
+          toast({ variant: "destructive", title: "Erreur", description: "Impossible d'enregistrer l'adresse." });
       } finally {
           setIsSubmittingAddress(false);
       }
@@ -231,7 +285,7 @@ export default function AccountPage() {
                                     </p>
                                 </div>
                                 <div className="text-right">
-                                    <span className={`text-xs font-medium px-2 py-1 rounded-full ${order.status === 'Livrée' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                                    <span className={`text-xs font-medium px-2 py-1 rounded-full ${order.status === 'Livrée' ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300'}`}>
                                         {order.status}
                                     </span>
                                 </div>
@@ -240,7 +294,7 @@ export default function AccountPage() {
                             </div>
                             ))
                         ) : (
-                            <div className="text-center py-8 bg-secondary rounded-lg">
+                            <div className="text-center py-8 bg-secondary/70 rounded-lg">
                             <p className="text-muted-foreground">Vous n'avez pas encore de commande.</p>
                             <Button asChild className="mt-4">
                                 <Link href="/order">Commander maintenant</Link>
@@ -264,22 +318,21 @@ export default function AccountPage() {
                                 <div key={addr.id} className="p-3 border rounded-md">
                                     <div className="flex justify-between items-center">
                                       <p className="font-semibold">{addr.type} {addr.isDefault && <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full ml-2">Défaut</span>}</p>
-                                      <Button variant="ghost" size="sm">Modifier</Button>
+                                      <Button variant="ghost" size="sm" onClick={() => handleOpenEditDialog(addr)}>Modifier</Button>
                                     </div>
                                     <p className="text-sm text-muted-foreground">{addr.address}</p>
                                 </div>
                             )) : (
                                 <p className="text-sm text-muted-foreground text-center py-4">Aucune adresse enregistrée.</p>
                             )}
-                            <Dialog open={isAddAddressOpen} onOpenChange={setIsAddAddressOpen}>
-                                <DialogTrigger asChild>
-                                    <Button variant="secondary" className="w-full"><PlusCircle className="mr-2 h-4 w-4" />Ajouter une adresse</Button>
-                                </DialogTrigger>
+                            <Button variant="secondary" className="w-full" onClick={handleOpenAddDialog}><PlusCircle className="mr-2 h-4 w-4" />Ajouter une adresse</Button>
+
+                            <Dialog open={isAddressDialogOpen} onOpenChange={setIsAddressDialogOpen}>
                                 <DialogContent className="sm:max-w-[425px]">
                                     <DialogHeader>
-                                        <DialogTitle>Ajouter une nouvelle adresse</DialogTitle>
+                                        <DialogTitle>{editingAddress ? "Modifier l'adresse" : "Ajouter une nouvelle adresse"}</DialogTitle>
                                         <DialogDescription>
-                                            Cette adresse sera disponible pour vos prochaines commandes.
+                                            {editingAddress ? "Mettez à jour les détails de votre adresse." : "Cette adresse sera disponible pour vos prochaines commandes."}
                                         </DialogDescription>
                                     </DialogHeader>
                                     <Form {...addressForm}>
@@ -338,10 +391,29 @@ export default function AccountPage() {
                                                     </FormItem>
                                                 )}
                                             />
-                                            <DialogFooter>
-                                                <Button type="submit" disabled={isSubmittingAddress}>
+                                            <DialogFooter className="flex justify-between w-full">
+                                                {editingAddress && (
+                                                    <AlertDialog>
+                                                        <AlertDialogTrigger asChild>
+                                                            <Button type="button" variant="destructive" className="mr-auto"><Trash2 className="mr-2 h-4 w-4" /> Supprimer</Button>
+                                                        </AlertDialogTrigger>
+                                                        <AlertDialogContent>
+                                                            <AlertDialogHeader>
+                                                                <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
+                                                                <AlertDialogDescription>
+                                                                    Cette action est irréversible et supprimera définitivement cette adresse.
+                                                                </AlertDialogDescription>
+                                                            </AlertDialogHeader>
+                                                            <AlertDialogFooter>
+                                                                <AlertDialogCancel>Annuler</AlertDialogCancel>
+                                                                <AlertDialogAction onClick={handleDeleteAddress}>Confirmer</AlertDialogAction>
+                                                            </AlertDialogFooter>
+                                                        </AlertDialogContent>
+                                                    </AlertDialog>
+                                                )}
+                                                <Button type="submit" disabled={isSubmittingAddress} className={!editingAddress ? 'w-full' : ''}>
                                                     {isSubmittingAddress && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                                    Enregistrer l'adresse
+                                                    Enregistrer
                                                 </Button>
                                             </DialogFooter>
                                         </form>
