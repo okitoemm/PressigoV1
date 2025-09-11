@@ -35,7 +35,10 @@ import { TShirtIcon } from "@/components/icons/t-shirt-icon";
 import { TrousersIcon } from "@/components/icons/trousers-icon";
 import { JacketIcon } from "@/components/icons/jacket-icon";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Terminal, Eye, EyeOff } from "lucide-react";
+import { Terminal, Eye, EyeOff, Loader2 } from "lucide-react";
+import { auth, db } from "@/lib/firebase/client-app";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 const stepOneSchema = z.object({
   name: z.string().min(2, { message: "Le nom est requis." }),
@@ -100,6 +103,7 @@ const clothingItems = [
 
 export function OrderForm() {
   const [step, setStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
 
@@ -152,16 +156,61 @@ export function OrderForm() {
 
   const handleBack = () => setStep((prev) => prev - 1);
   
-  const onSubmit = (data: FormValues) => {
-    console.log("Order submitted", data);
-    const orderId = `LAVOO-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
-
+  const onSubmit = async (data: FormValues) => {
+    setIsSubmitting(true);
     toast({
         title: "Commande en cours de création",
         description: "Nous finalisons votre commande...",
     });
 
-    router.push(`/order/success/${orderId}`);
+    try {
+      let userId: string | null = auth.currentUser?.uid || null;
+
+      // Create user if checkbox is checked and not already logged in
+      if (data.createAccount && !userId) {
+        try {
+          const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password!);
+          await updateProfile(userCredential.user, { displayName: data.name });
+          userId = userCredential.user.uid;
+          toast({ title: "Compte créé avec succès", description: "Votre commande est en cours de finalisation." });
+        } catch (error: any) {
+            let description = "Une erreur est survenue lors de la création du compte.";
+            if (error.code === 'auth/email-already-in-use') {
+                description = "Cette adresse e-mail est déjà utilisée. Veuillez vous connecter ou utiliser une autre adresse."
+            }
+            toast({ variant: "destructive", title: "Erreur d'inscription", description });
+            setIsSubmitting(false);
+            return;
+        }
+      }
+      
+      if (!userId) {
+        toast({ variant: "destructive", title: "Utilisateur non connecté", description: "Veuillez vous connecter ou créer un compte pour commander." });
+        setIsSubmitting(false);
+        // Optionally redirect to login
+        // router.push('/login'); 
+        return;
+      }
+
+      // Save order to Firestore
+      const { createAccount, password, ...orderData } = data;
+      const orderPayload = {
+        ...orderData,
+        userId: userId,
+        status: "En cours de traitement",
+        items: data.items.filter(item => item.quantity > 0).map(({icon, ...rest}) => rest), // Don't store icon component
+        createdAt: serverTimestamp(),
+      };
+
+      const docRef = await addDoc(collection(db, "orders"), orderPayload);
+      
+      router.push(`/order/success/${docRef.id}`);
+
+    } catch (error) {
+        console.error("Order submission error: ", error);
+        toast({ variant: "destructive", title: "Erreur", description: "Impossible de créer la commande." });
+        setIsSubmitting(false);
+    }
   };
 
   const progressValue = (step / 4) * 100;
@@ -181,17 +230,17 @@ export function OrderForm() {
 
             <div className="flex justify-between items-center pt-4">
               {step > 1 ? (
-                <Button type="button" variant="outline" onClick={handleBack}>
+                <Button type="button" variant="outline" onClick={handleBack} disabled={isSubmitting}>
                   Retour
                 </Button>
               ) : <div />}
               {step < 4 ? (
-                <Button type="button" onClick={handleNext}>
+                <Button type="button" onClick={handleNext} disabled={isSubmitting}>
                   Suivant
                 </Button>
               ) : (
-                <Button type="submit">
-                  Confirmer et créer mon compte
+                <Button type="submit" disabled={isSubmitting}>
+                   {isSubmitting ? <Loader2 className="animate-spin" /> : 'Confirmer et commander'}
                 </Button>
               )}
             </div>
@@ -385,3 +434,5 @@ function StepFourContent({ values }: { values: FormValues }) {
     </motion.div>
   );
 }
+
+    
