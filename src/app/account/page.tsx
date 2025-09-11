@@ -5,16 +5,24 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { auth, db } from "@/lib/firebase/client-app";
 import { onAuthStateChanged, signOut, User as FirebaseUser } from "firebase/auth";
-import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
+import { collection, query, where, getDocs, orderBy, addDoc } from "firebase/firestore";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User, History, Settings, MapPin, Bell, LogOut, Loader2 } from "lucide-react";
+import { User, History, Settings, MapPin, Bell, LogOut, Loader2, PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { OrderTracking } from "@/components/order-tracking";
 import { useToast } from "@/hooks/use-toast";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 
 type Order = {
@@ -31,6 +39,12 @@ type Address = {
     isDefault: boolean;
 };
 
+const addressSchema = z.object({
+  type: z.string().min(1, { message: "Le type d'adresse est requis." }),
+  address: z.string().min(5, { message: "L'adresse est requise." }),
+  isDefault: z.boolean().default(false),
+});
+
 export default function AccountPage() {
   const router = useRouter();
   const { toast } = useToast();
@@ -38,6 +52,24 @@ export default function AccountPage() {
   const [pastOrders, setPastOrders] = useState<Order[]>([]);
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isAddAddressOpen, setIsAddAddressOpen] = useState(false);
+  const [isSubmittingAddress, setIsSubmittingAddress] = useState(false);
+
+  const addressForm = useForm<z.infer<typeof addressSchema>>({
+    resolver: zodResolver(addressSchema),
+    defaultValues: {
+      type: "Maison",
+      address: "",
+      isDefault: false,
+    },
+  });
+
+  const fetchAddresses = async (userId: string) => {
+      const addressesQuery = query(collection(db, `users/${userId}/addresses`));
+      const addressesSnapshot = await getDocs(addressesQuery);
+      const userAddresses = addressesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Address));
+      setAddresses(userAddresses);
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -64,10 +96,7 @@ export default function AccountPage() {
           setPastOrders(orders);
 
           // Fetch addresses
-          const addressesQuery = query(collection(db, `users/${currentUser.uid}/addresses`));
-          const addressesSnapshot = await getDocs(addressesQuery);
-          const userAddresses = addressesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Address));
-          setAddresses(userAddresses);
+          await fetchAddresses(currentUser.uid);
 
         } catch (error) {
           console.error("Error fetching data: ", error);
@@ -90,6 +119,23 @@ export default function AccountPage() {
     } catch (error) {
       toast({ variant: "destructive", title: "Erreur", description: "Impossible de se déconnecter." });
     }
+  };
+
+  const onAddressSubmit = async (values: z.infer<typeof addressSchema>) => {
+      if (!user) return;
+      setIsSubmittingAddress(true);
+      try {
+          await addDoc(collection(db, `users/${user.uid}/addresses`), values);
+          toast({ title: "Succès", description: "Votre nouvelle adresse a été ajoutée."});
+          await fetchAddresses(user.uid);
+          setIsAddAddressOpen(false);
+          addressForm.reset();
+      } catch (error) {
+          console.error("Error adding address: ", error);
+          toast({ variant: "destructive", title: "Erreur", description: "Impossible d'ajouter l'adresse." });
+      } finally {
+          setIsSubmittingAddress(false);
+      }
   };
 
   if (loading) {
@@ -185,7 +231,7 @@ export default function AccountPage() {
                                     </p>
                                 </div>
                                 <div className="text-right">
-                                    <span className={`text-xs font-medium px-2 py-1 rounded-full ${order.status === 'Livrée' ? 'bg-green-500/20 text-green-700' : 'bg-yellow-500/20 text-yellow-700'}`}>
+                                    <span className={`text-xs font-medium px-2 py-1 rounded-full ${order.status === 'Livrée' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
                                         {order.status}
                                     </span>
                                 </div>
@@ -225,7 +271,83 @@ export default function AccountPage() {
                             )) : (
                                 <p className="text-sm text-muted-foreground text-center py-4">Aucune adresse enregistrée.</p>
                             )}
-                            <Button variant="secondary" className="w-full">Ajouter une adresse</Button>
+                            <Dialog open={isAddAddressOpen} onOpenChange={setIsAddAddressOpen}>
+                                <DialogTrigger asChild>
+                                    <Button variant="secondary" className="w-full"><PlusCircle className="mr-2 h-4 w-4" />Ajouter une adresse</Button>
+                                </DialogTrigger>
+                                <DialogContent className="sm:max-w-[425px]">
+                                    <DialogHeader>
+                                        <DialogTitle>Ajouter une nouvelle adresse</DialogTitle>
+                                        <DialogDescription>
+                                            Cette adresse sera disponible pour vos prochaines commandes.
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <Form {...addressForm}>
+                                        <form onSubmit={addressForm.handleSubmit(onAddressSubmit)} className="space-y-4 py-4">
+                                            <FormField
+                                                control={addressForm.control}
+                                                name="type"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>Type d'adresse</FormLabel>
+                                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                          <FormControl>
+                                                            <SelectTrigger>
+                                                              <SelectValue placeholder="Choisissez un type" />
+                                                            </SelectTrigger>
+                                                          </FormControl>
+                                                          <SelectContent>
+                                                            <SelectItem value="Maison">Maison</SelectItem>
+                                                            <SelectItem value="Travail">Travail</SelectItem>
+                                                            <SelectItem value="Autre">Autre</SelectItem>
+                                                          </SelectContent>
+                                                        </Select>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+                                            <FormField
+                                                control={addressForm.control}
+                                                name="address"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>Adresse complète</FormLabel>
+                                                        <FormControl>
+                                                            <Input placeholder="123 Rue de Paris, 75001 Paris" {...field} />
+                                                        </FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+                                            <FormField
+                                                control={addressForm.control}
+                                                name="isDefault"
+                                                render={({ field }) => (
+                                                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                                                        <FormControl>
+                                                            <Checkbox
+                                                                checked={field.value}
+                                                                onCheckedChange={field.onChange}
+                                                            />
+                                                        </FormControl>
+                                                        <div className="space-y-1 leading-none">
+                                                            <FormLabel>
+                                                                Définir comme adresse par défaut
+                                                            </FormLabel>
+                                                        </div>
+                                                    </FormItem>
+                                                )}
+                                            />
+                                            <DialogFooter>
+                                                <Button type="submit" disabled={isSubmittingAddress}>
+                                                    {isSubmittingAddress && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                                    Enregistrer l'adresse
+                                                </Button>
+                                            </DialogFooter>
+                                        </form>
+                                    </Form>
+                                </DialogContent>
+                            </Dialog>
                         </CardContent>
                     </Card>
                      <Card>
@@ -257,3 +379,5 @@ export default function AccountPage() {
     </div>
   );
 }
+
+    
