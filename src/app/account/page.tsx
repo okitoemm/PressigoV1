@@ -24,44 +24,54 @@ type Order = {
   status: string;
 };
 
-const addresses = [
-    { id: 1, type: "Maison", address: "123 Rue de la République, 75001 Paris", isDefault: true },
-    { id: 2, type: "Travail", address: "45 Avenue des Champs-Élysées, 75008 Paris", isDefault: false },
-]
+type Address = {
+    id: string;
+    type: string;
+    address: string;
+    isDefault: boolean;
+};
 
 export default function AccountPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [pastOrders, setPastOrders] = useState<Order[]>([]);
+  const [addresses, setAddresses] = useState<Address[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
-        // Fetch orders
+        setLoading(true);
         try {
-          const q = query(
+          // Fetch orders
+          const ordersQuery = query(
             collection(db, "orders"),
             where("userId", "==", currentUser.uid),
             orderBy("createdAt", "desc")
           );
-          const querySnapshot = await getDocs(q);
-          const orders = querySnapshot.docs.map(doc => {
+          const ordersSnapshot = await getDocs(ordersQuery);
+          const orders = ordersSnapshot.docs.map(doc => {
             const data = doc.data();
             return {
               id: doc.id,
-              // Note: Formatting timestamp might require a library like date-fns
               date: data.createdAt?.toDate().toLocaleDateString('fr-FR') || 'Date inconnue',
-              total: "N/A", // Total price isn't stored, might need to calculate
+              total: "N/A", 
               status: data.status,
             };
           });
           setPastOrders(orders);
+
+          // Fetch addresses
+          const addressesQuery = query(collection(db, `users/${currentUser.uid}/addresses`));
+          const addressesSnapshot = await getDocs(addressesQuery);
+          const userAddresses = addressesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Address));
+          setAddresses(userAddresses);
+
         } catch (error) {
-          console.error("Error fetching orders: ", error);
-          toast({ variant: "destructive", title: "Erreur", description: "Impossible de charger l'historique des commandes." });
+          console.error("Error fetching data: ", error);
+          toast({ variant: "destructive", title: "Erreur", description: "Impossible de charger vos informations." });
         }
       } else {
         router.push("/login");
@@ -175,7 +185,7 @@ export default function AccountPage() {
                                     </p>
                                 </div>
                                 <div className="text-right">
-                                    <span className={`text-xs font-medium px-2 py-1 rounded-full ${order.status === 'Livrée' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                                    <span className={`text-xs font-medium px-2 py-1 rounded-full ${order.status === 'Livrée' ? 'bg-green-500/20 text-green-700' : 'bg-yellow-500/20 text-yellow-700'}`}>
                                         {order.status}
                                     </span>
                                 </div>
@@ -204,7 +214,7 @@ export default function AccountPage() {
                             <CardTitle className="flex items-center gap-2"><MapPin className="w-5 h-5"/> Adresses</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            {addresses.map(addr => (
+                            {addresses.length > 0 ? addresses.map(addr => (
                                 <div key={addr.id} className="p-3 border rounded-md">
                                     <div className="flex justify-between items-center">
                                       <p className="font-semibold">{addr.type} {addr.isDefault && <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full ml-2">Défaut</span>}</p>
@@ -212,7 +222,9 @@ export default function AccountPage() {
                                     </div>
                                     <p className="text-sm text-muted-foreground">{addr.address}</p>
                                 </div>
-                            ))}
+                            )) : (
+                                <p className="text-sm text-muted-foreground text-center py-4">Aucune adresse enregistrée.</p>
+                            )}
                             <Button variant="secondary" className="w-full">Ajouter une adresse</Button>
                         </CardContent>
                     </Card>
