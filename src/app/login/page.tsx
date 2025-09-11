@@ -13,6 +13,8 @@ import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
+import { auth } from "@/lib/firebase/client-app";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Adresse e-mail invalide." }),
@@ -41,24 +43,46 @@ export default function LoginPage() {
     defaultValues: { name: "", email: "", password: "" },
   });
 
-  const onLoginSubmit = (values: z.infer<typeof loginSchema>) => {
+  const onLoginSubmit = async (values: z.infer<typeof loginSchema>) => {
     setIsSubmitting(true);
-    console.log("Login data:", values);
-    toast({ title: "Connexion réussie", description: "Vous allez être redirigé." });
-    setTimeout(() => {
+    try {
+      await signInWithEmailAndPassword(auth, values.email, values.password);
+      toast({ title: "Connexion réussie", description: "Vous allez être redirigé." });
       router.push("/account");
+    } catch (error: any) {
+      console.error("Login error:", error);
+      toast({
+        variant: "destructive",
+        title: "Erreur de connexion",
+        description: "Email ou mot de passe incorrect.",
+      });
+    } finally {
       setIsSubmitting(false);
-    }, 1000);
+    }
   };
 
-  const onRegisterSubmit = (values: z.infer<typeof registerSchema>) => {
+  const onRegisterSubmit = async (values: z.infer<typeof registerSchema>) => {
     setIsSubmitting(true);
-    console.log("Register data:", values);
-    toast({ title: "Inscription réussie", description: "Votre compte a été créé. Vous pouvez maintenant vous connecter." });
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
+      await updateProfile(userCredential.user, { displayName: values.name });
+      
+      toast({ title: "Inscription réussie", description: "Votre compte a été créé. Vous pouvez maintenant vous connecter." });
       setActiveTab("login");
-    }, 1000);
+    } catch (error: any) {
+        console.error("Register error:", error);
+        let description = "Une erreur est survenue.";
+        if (error.code === 'auth/email-already-in-use') {
+            description = "Cette adresse e-mail est déjà utilisée."
+        }
+      toast({
+        variant: "destructive",
+        title: "Erreur d'inscription",
+        description,
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -171,5 +195,3 @@ export default function LoginPage() {
     </div>
   );
 }
-
-    
