@@ -5,22 +5,30 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Search, Loader2, PackageCheck, Package, Truck, CircleAlert } from "lucide-react";
+import { Search, Loader2, PackageCheck, Package, Truck, CircleAlert, XCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
+import { db } from "@/lib/firebase/client-app";
+import { doc, getDoc } from "firebase/firestore";
 
-const mockStatus: { [key: string]: { status: string; description: string; icon: React.ElementType } } = {
-    "LAVOO-ABC123": { status: "Livrée", description: "Votre commande a été livrée avec succès le 15/05/2024.", icon: PackageCheck },
-    "LAVOO-XYZ789": { status: "En cours de traitement", description: "Nous préparons votre commande pour la collecte.", icon: Package },
-    "LAVOO-LMN456": { status: "En transit", description: "Votre commande est en route vers notre centre de nettoyage.", icon: Truck },
+const statusIcons: { [key: string]: React.ElementType } = {
+    "En cours de traitement": Package,
+    "En transit": Truck,
+    "Livrée": PackageCheck,
+    "Annulée": XCircle,
+};
+
+type OrderStatus = {
+    status: string;
+    description: string;
 };
 
 export function OrderTracking() {
     const [orderId, setOrderId] = useState("");
-    const [status, setStatus] = useState<{ status: string; description: string; icon: React.ElementType } | null>(null);
+    const [status, setStatus] = useState<OrderStatus | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const handleTrackOrder = () => {
+    const handleTrackOrder = async () => {
         if (!orderId) {
             setError("Veuillez entrer un numéro de commande.");
             return;
@@ -29,20 +37,30 @@ export function OrderTracking() {
         setError(null);
         setStatus(null);
 
-        setTimeout(() => {
-            const foundStatus = mockStatus[orderId.toUpperCase()];
-            if (foundStatus) {
-                setStatus(foundStatus);
+        try {
+            const docRef = doc(db, "orders", orderId.trim());
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                setStatus({
+                    status: data.status,
+                    description: `Commande du ${data.createdAt.toDate().toLocaleDateString('fr-FR')}.`,
+                });
             } else {
                 setError("Aucune commande trouvée avec ce numéro.");
             }
+        } catch (err) {
+            console.error("Error fetching order:", err);
+            setError("Une erreur est survenue lors de la recherche de la commande.");
+        } finally {
             setIsLoading(false);
-        }, 1500);
+        }
     };
 
     const getStatusIcon = () => {
         if (!status) return null;
-        const Icon = status.icon;
+        const Icon = statusIcons[status.status] || CircleAlert;
         return <Icon className="w-12 h-12 text-primary" />;
     }
 
@@ -56,7 +74,7 @@ export function OrderTracking() {
                 <div className="flex w-full max-w-sm items-center space-x-2">
                     <Input
                         type="text"
-                        placeholder="Ex: LAVOO-ABC123"
+                        placeholder="Ex: d5kFp8..."
                         value={orderId}
                         onChange={(e) => setOrderId(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleTrackOrder()}
