@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Menu, WashingMachine, User, ChevronDown } from 'lucide-react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 
 
@@ -20,6 +20,15 @@ export function Header() {
     { href: '/#how-it-works', label: 'Comment ça marche' },
     { href: '/blog', label: 'Blog' },
   ];
+
+  const proServicesLinks = [
+      { href: "/pro/hotel", label: "Hôtels & Spas" },
+      { href: "/pro/restaurant", label: "Restaurants" },
+      { href: "/pro/construction", label: "Construction & BTP" },
+      { href: "/pro/airbnb", label: "Conciergerie & Airbnb" },
+      { href: "/pro/appartement", label: "Appartements & Copropriétés" },
+      { href: "/pro/autres", label: "Autres business" },
+  ]
 
   return (
     <header className="bg-card/80 backdrop-blur-lg sticky top-0 z-40 border-b">
@@ -43,9 +52,9 @@ export function Header() {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                    <DropdownMenuItem asChild><Link href="/pro/hotel">Hôtels</Link></DropdownMenuItem>
-                    <DropdownMenuItem asChild><Link href="/pro/appartement">Appartements</Link></DropdownMenuItem>
-                    <DropdownMenuItem asChild><Link href="/pro/airbnb">Airbnb</Link></DropdownMenuItem>
+                    {proServicesLinks.map(link => (
+                        <DropdownMenuItem key={link.href} asChild><Link href={link.href}>{link.label}</Link></DropdownMenuItem>
+                    ))}
                 </DropdownMenuContent>
             </DropdownMenu>
         </nav>
@@ -79,13 +88,13 @@ export function Header() {
                       {link.label}
                     </Link>
                   ))}
-                   <p className="font-semibold text-foreground/80">Services Pro</p>
+                   <p className="font-semibold text-foreground/80 pt-2 border-t">Services Pro</p>
                     <div className="flex flex-col gap-4 pl-4">
-                        <Link href="/pro/hotel" onClick={() => setIsOpen(false)} className="hover:text-primary transition-colors text-base">Hôtels</Link>
-                        <Link href="/pro/appartement" onClick={() => setIsOpen(false)} className="hover:text-primary transition-colors text-base">Appartements</Link>
-                        <Link href="/pro/airbnb" onClick={() => setIsOpen(false)} className="hover:text-primary transition-colors text-base">Airbnb</Link>
+                        {proServicesLinks.map(link => (
+                             <Link key={link.href} href={link.href} onClick={() => setIsOpen(false)} className="hover:text-primary transition-colors text-base">{link.label}</Link>
+                        ))}
                     </div>
-                   <Link href="/login" onClick={() => setIsOpen(false)} className="hover:text-primary transition-colors">
+                   <Link href="/login" onClick={() => setIsOpen(false)} className="hover:text-primary transition-colors pt-4 border-t">
                       Se connecter / S'inscrire
                     </Link>
                      <Link href="/account" onClick={() => setIsOpen(false)} className="hovertext-primary transition-colors">
