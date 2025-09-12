@@ -47,16 +47,82 @@ export default function Home() {
             </div>
             <div className="relative rounded-lg overflow-hidden group">
                <Image
-                  src="https://picsum.photos/800/600"
+                  src="https://picsum.photos/seed/1/800/600"
                   alt="Présentation du service LAVOO Express"
                   width={800}
                   height={600}
                   className="w-full h-auto object-cover rounded-lg transform group-hover:scale-105 transition-transform duration-300"
-                  data-ai-hint="laundry service"
+                  data-ai-hint="laundry service employee"
                 />
-              <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+              <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                 <PlayCircle className="w-20 h-20 text-white/80 group-hover:text-white transition-colors cursor-pointer" />
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 md:py-24 bg-secondary/30">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="relative rounded-lg overflow-hidden group md:order-2">
+               <Image
+                  src="https://picsum.photos/seed/2/800/600"
+                  alt="Technologie de pointe pour le soin du linge"
+                  width={800}
+                  height={600}
+                  className="w-full h-auto object-cover rounded-lg transform group-hover:scale-105 transition-transform duration-300"
+                  data-ai-hint="modern washing machine"
+                />
+            </div>
+            <div className="space-y-6 md:order-1">
+              <h2 className="text-3xl md:text-4xl font-headline font-bold text-foreground">Une technologie au service de vos vêtements</h2>
+              <p className="text-lg text-muted-foreground">
+                Nous utilisons des équipements de dernière génération et des produits écologiques pour garantir un nettoyage impeccable tout en préservant la planète.
+              </p>
+              <ul className="space-y-4">
+                <li className="flex items-start">
+                  <CheckCircle className="w-6 h-6 text-primary mr-3 flex-shrink-0 mt-1" />
+                  <span><span className="font-semibold">Nettoyage Écologique :</span> Des détergents biodégradables qui respectent vos textiles et l'environnement.</span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="w-6 h-6 text-primary mr-3 flex-shrink-0 mt-1" />
+                  <span><span className="font-semibold">Contrôle Qualité :</span> Chaque cycle est suivi numériquement pour un résultat optimal et constant.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+       <section className="py-16 md:py-24 bg-white">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="space-y-6">
+              <h2 className="text-3xl md:text-4xl font-headline font-bold text-foreground">La flexibilité à votre portée</h2>
+              <p className="text-lg text-muted-foreground">
+                Notre service s'adapte à votre emploi du temps. Choisissez les créneaux de collecte et de livraison qui vous arrangent, directement depuis notre application.
+              </p>
+              <ul className="space-y-4">
+                <li className="flex items-start">
+                  <CheckCircle className="w-6 h-6 text-primary mr-3 flex-shrink-0 mt-1" />
+                  <span><span className="font-semibold">Planification Facile :</span> Quelques clics suffisent pour programmer votre commande.</span>
+                </li>
+                 <li className="flex items-start">
+                  <CheckCircle className="w-6 h-6 text-primary mr-3 flex-shrink-0 mt-1" />
+                  <span><span className="font-semibold">Suivi en Temps Réel :</span> Soyez notifié à chaque étape, de la collecte à la livraison.</span>
+                </li>
+              </ul>
+            </div>
+            <div className="relative rounded-lg overflow-hidden group">
+               <Image
+                  src="https://picsum.photos/seed/3/800/600"
+                  alt="Personne utilisant l'application LAVOO Express sur son smartphone"
+                  width={800}
+                  height={600}
+                  className="w-full h-auto object-cover rounded-lg transform group-hover:scale-105 transition-transform duration-300"
+                  data-ai-hint="person phone app"
+                />
             </div>
           </div>
         </div>
