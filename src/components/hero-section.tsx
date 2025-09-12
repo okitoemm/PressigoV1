@@ -46,7 +46,7 @@ export function HeroSection() {
             Service de laverie & pressing en 24h
           </h1>
           <p className="text-lg md:text-xl text-primary-foreground/90 max-w-md">
-            sur la base de plus de 200 000 avis dans 14 pays
+            sur la base de plus de 2680 avis dans 7 villes
           </p>
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-0.5">
@@ -71,12 +71,12 @@ export function HeroSection() {
           </div>
           <div className="flex items-center gap-4 mt-2">
             <div className="flex -space-x-2">
-              <Image className="inline-block h-8 w-8 rounded-full ring-2 ring-primary-foreground" src="https://picsum.photos/id/1027/50/50" data-ai-hint="person face" width={32} height={32} alt="Client 1" />
-              <Image className="inline-block h-8 w-8 rounded-full ring-2 ring-primary-foreground" src="https://picsum.photos/id/1028/50/50" data-ai-hint="person face" width={32} height={32} alt="Client 2" />
-              <Image className="inline-block h-8 w-8 rounded-full ring-2 ring-primary-foreground" src="https://picsum.photos/id/1029/50/50" data-ai-hint="person face" width={32} height={32} alt="Client 3" />
-              <Image className="inline-block h-8 w-8 rounded-full ring-2 ring-primary-foreground" src="https://picsum.photos/id/1031/50/50" data-ai-hint="person face" width={32} height={32} alt="Client 4" />
+              <Image className="inline-block h-8 w-8 rounded-full ring-2 ring-primary-foreground" src="/images/imageCaroussel/Client1.png" data-ai-hint="person face" width={32} height={32} alt="Client 1" />
+              <Image className="inline-block h-8 w-8 rounded-full ring-2 ring-primary-foreground" src="/images/imageCaroussel/Client5.png" data-ai-hint="person face" width={32} height={32} alt="Client 2" />
+              <Image className="inline-block h-8 w-8 rounded-full ring-2 ring-primary-foreground" src="/images/imageCaroussel/Client3.png" data-ai-hint="person face" width={32} height={32} alt="Client 3" />
+              <Image className="inline-block h-8 w-8 rounded-full ring-2 ring-primary-foreground" src="/images/imageCaroussel/Client8.png" data-ai-hint="person face" width={32} height={32} alt="Client 4" />
             </div>
-            <p className="text-sm text-primary-foreground/90">Plus de 200 000 clients satisfaits !</p>
+            <p className="text-sm text-primary-foreground/90">Plus de 3863 clients satisfaits !</p>
           </div>
           <form onSubmit={handleZipCheck} className="w-full max-w-md mt-4 p-4 bg-white/20 rounded-lg space-y-2">
             <label className="font-semibold">Vérifiez si nous livrons chez vous :</label>
@@ -101,10 +101,10 @@ export function HeroSection() {
         </div>
         <div className="hidden md:flex justify-center">
             <Image
-                src="/images/imagehero/imagehero1.png"
+                src="/images/imagehero/imagehero2.png"
                 alt="Happy customer receiving laundry"
-                width={500}
-                height={500}
+                width={800}
+                height={800}
                 className="rounded-lg"
                 data-ai-hint="happy customer"
             />

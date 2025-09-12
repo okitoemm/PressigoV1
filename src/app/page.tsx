@@ -47,15 +47,14 @@ export default function Home() {
             </div>
             <div className="relative rounded-lg overflow-hidden group">
                <Image
-                  src="https://picsum.photos/seed/1/800/600"
+                  src="/images/imageCaroussel/Client10.png"
                   alt="Présentation du service LAVOO Express"
-                  width={800}
+                  width={500}
                   height={600}
-                  className="w-full h-auto object-cover rounded-lg transform group-hover:scale-105 transition-transform duration-300"
+                  className="w-500 h-auto object-cover rounded-lg transform group-hover:scale-105 transition-transform duration-300"
                   data-ai-hint="laundry service employee"
                 />
               <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                <PlayCircle className="w-20 h-20 text-white/80 group-hover:text-white transition-colors cursor-pointer" />
               </div>
             </div>
           </div>
@@ -67,11 +66,11 @@ export default function Home() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="relative rounded-lg overflow-hidden group md:order-2">
                <Image
-                  src="https://picsum.photos/seed/2/800/600"
+                  src="/images/imageCaroussel/Client11.png"
                   alt="Technologie de pointe pour le soin du linge"
-                  width={800}
-                  height={600}
-                  className="w-full h-auto object-cover rounded-lg transform group-hover:scale-105 transition-transform duration-300"
+                  width={500}
+                  height={500}
+                  className="w-500 h-auto object-cover rounded-lg transform group-hover:scale-105 transition-transform duration-300"
                   data-ai-hint="modern washing machine"
                 />
             </div>
@@ -116,11 +115,11 @@ export default function Home() {
             </div>
             <div className="relative rounded-lg overflow-hidden group">
                <Image
-                  src="https://picsum.photos/seed/3/800/600"
+                  src="/images/imageCaroussel/Client15.png"
                   alt="Personne utilisant l'application LAVOO Express sur son smartphone"
-                  width={800}
-                  height={600}
-                  className="w-full h-auto object-cover rounded-lg transform group-hover:scale-105 transition-transform duration-300"
+                  width={500}
+                  height={500}
+                  className="w-500 h-500 object-cover rounded-lg transform group-hover:scale-105 transition-transform duration-300"
                   data-ai-hint="person phone app"
                 />
             </div>

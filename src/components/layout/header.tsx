@@ -22,7 +22,7 @@ export function Header() {
       <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
         <Link href="/" className="flex items-center gap-2 font-bold text-xl text-primary">
           <WashingMachine className="h-7 w-7 text-primary" />
-          <span className="font-headline">LAVOO Express</span>
+          <span className="font-headline">LAVOO express</span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
