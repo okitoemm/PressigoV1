@@ -58,7 +58,7 @@ const reviews = [
   {
     name: "Antoine F.",
     title: "Client vérifié",
-    avatar: "/images/imageCaroussel/Client20.png",
+    avatar: "/images/imageCaroussel/Client7.png",
     rating: 5,
     review: "Rapide, fiable et de grande qualité. Le QR code pour le suivi est une super idée. Très satisfait.",
   },

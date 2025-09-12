@@ -5,7 +5,10 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, WashingMachine, User } from 'lucide-react';
+import { Menu, WashingMachine, User, ChevronDown } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { cn } from '@/lib/utils';
+
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,6 +18,7 @@ export function Header() {
     { href: '/order', label: 'Commander' },
     { href: '/#services', label: 'Services' },
     { href: '/#how-it-works', label: 'Comment ça marche' },
+    { href: '/blog', label: 'Blog' },
   ];
 
   return (
@@ -31,6 +35,19 @@ export function Header() {
               {link.label}
             </Link>
           ))}
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="flex items-center gap-1 text-sm font-medium text-foreground/80 hover:text-primary px-0 hover:bg-transparent">
+                    Services Pro
+                    <ChevronDown className="h-4 w-4" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                    <DropdownMenuItem asChild><Link href="/pro/hotel">Hôtels</Link></DropdownMenuItem>
+                    <DropdownMenuItem asChild><Link href="/pro/appartement">Appartements</Link></DropdownMenuItem>
+                    <DropdownMenuItem asChild><Link href="/pro/airbnb">Airbnb</Link></DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
         </nav>
 
         <div className="flex items-center gap-2">
@@ -62,10 +79,16 @@ export function Header() {
                       {link.label}
                     </Link>
                   ))}
+                   <p className="font-semibold text-foreground/80">Services Pro</p>
+                    <div className="flex flex-col gap-4 pl-4">
+                        <Link href="/pro/hotel" onClick={() => setIsOpen(false)} className="hover:text-primary transition-colors text-base">Hôtels</Link>
+                        <Link href="/pro/appartement" onClick={() => setIsOpen(false)} className="hover:text-primary transition-colors text-base">Appartements</Link>
+                        <Link href="/pro/airbnb" onClick={() => setIsOpen(false)} className="hover:text-primary transition-colors text-base">Airbnb</Link>
+                    </div>
                    <Link href="/login" onClick={() => setIsOpen(false)} className="hover:text-primary transition-colors">
                       Se connecter / S'inscrire
                     </Link>
-                     <Link href="/account" onClick={() => setIsOpen(false)} className="hover:text-primary transition-colors">
+                     <Link href="/account" onClick={() => setIsOpen(false)} className="hovertext-primary transition-colors">
                       Mon Compte
                     </Link>
                 </nav>
