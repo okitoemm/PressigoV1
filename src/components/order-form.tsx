@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -31,11 +32,8 @@ import {
 } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
-import { TShirtIcon } from "@/components/icons/t-shirt-icon";
-import { TrousersIcon } from "@/components/icons/trousers-icon";
-import { JacketIcon } from "@/components/icons/jacket-icon";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Terminal, Eye, EyeOff, Loader2, Shirt, Redo, Undo, Diamond, Milestone, Hand, Wind } from "lucide-react";
+import { Terminal, Eye, EyeOff, Loader2 } from "lucide-react";
 import { auth, db } from "@/lib/firebase/client-app";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
@@ -63,7 +61,7 @@ const stepTwoSchema = z.object({
   items: z.array(z.object({
     id: z.string(),
     name: z.string(),
-    icon: z.any(),
+    imageUrl: z.string(),
     quantity: z.number().min(0),
     category: z.string(),
   })).refine(items => items.some(item => item.quantity > 0), { message: "Veuillez sélectionner au moins un article." }),
@@ -99,27 +97,27 @@ const validZipCodes = ["75001", "75002", "75003", "75004", "75005", "75006", "75
 
 const clothingItems = [
   // Hauts
-  { id: 'tshirt', name: 'T-Shirts', icon: TShirtIcon, category: "Hauts" },
-  { id: 'chemise', name: 'Chemises', icon: Shirt, category: "Hauts" },
-  { id: 'blouse', name: 'Blouses', icon: Hand, category: "Hauts" }, // Placeholder icon
-  { id: 'pull', name: 'Pulls', icon: Wind, category: "Hauts" }, // Placeholder icon
+  { id: 'tshirt', name: 'T-Shirts', imageUrl: 'https://picsum.photos/seed/tshirt/100/100', category: "Hauts" },
+  { id: 'chemise', name: 'Chemises', imageUrl: 'https://picsum.photos/seed/chemise/100/100', category: "Hauts" },
+  { id: 'blouse', name: 'Blouses', imageUrl: 'https://picsum.photos/seed/blouse/100/100', category: "Hauts" },
+  { id: 'pull', name: 'Pulls', imageUrl: 'https://picsum.photos/seed/pull/100/100', category: "Hauts" },
   // Bas
-  { id: 'jeans', name: 'Jeans', icon: TrousersIcon, category: "Bas" },
-  { id: 'trousers', name: 'Pantalons', icon: TrousersIcon, category: "Bas" },
-  { id: 'short', name: 'Shorts', icon: TrousersIcon, category: "Bas" },
-  { id: 'jupe', name: 'Jupes', icon: Redo, category: "Bas" }, // Placeholder icon
+  { id: 'jeans', name: 'Jeans', imageUrl: 'https://picsum.photos/seed/jeans/100/100', category: "Bas" },
+  { id: 'trousers', name: 'Pantalons', imageUrl: 'https://picsum.photos/seed/trousers/100/100', category: "Bas" },
+  { id: 'short', name: 'Shorts', imageUrl: 'https://picsum.photos/seed/short/100/100', category: "Bas" },
+  { id: 'jupe', name: 'Jupes', imageUrl: 'https://picsum.photos/seed/jupe/100/100', category: "Bas" },
   // Pièces Uniques
-  { id: 'robe_simple', name: 'Robe Simple', icon: Undo, category: "Pièces Uniques" }, // Placeholder icon
-  { id: 'robe_speciale', name: 'Robe (avec pierres)', icon: Diamond, category: "Pièces Uniques" },
-  { id: 'costume', name: 'Costumes', icon: Milestone, category: "Pièces Uniques" }, // Placeholder icon
+  { id: 'robe_simple', name: 'Robe Simple', imageUrl: 'https://picsum.photos/seed/robe_simple/100/100', category: "Pièces Uniques" },
+  { id: 'robe_speciale', name: 'Robe (soirée)', imageUrl: 'https://picsum.photos/seed/robe_speciale/100/100', category: "Pièces Uniques" },
+  { id: 'costume', name: 'Costumes', imageUrl: 'https://picsum.photos/seed/costume/100/100', category: "Pièces Uniques" },
   // Vestes & Manteaux
-  { id: 'jacket', name: 'Vestes', icon: JacketIcon, category: "Vestes & Manteaux" },
-  { id: 'blouson', name: 'Blousons', icon: JacketIcon, category: "Vestes & Manteaux" },
-  { id: 'manteau', name: 'Manteaux', icon: JacketIcon, category: "Vestes & Manteaux" },
+  { id: 'jacket', name: 'Vestes', imageUrl: 'https://picsum.photos/seed/jacket/100/100', category: "Vestes & Manteaux" },
+  { id: 'blouson', name: 'Blousons', imageUrl: 'https://picsum.photos/seed/blouson/100/100', category: "Vestes & Manteaux" },
+  { id: 'manteau', name: 'Manteaux', imageUrl: 'https://picsum.photos/seed/manteau/100/100', category: "Vestes & Manteaux" },
   // Tissus
-  { id: 'tissu', name: 'Tissus au mètre', icon: Shirt, category: "Tissus & Linge" },
-  { id: 'drap', name: 'Draps', icon: Shirt, category: "Tissus & Linge" },
-  { id: 'serviette', name: 'Serviettes', icon: Shirt, category: "Tissus & Linge" },
+  { id: 'tissu', name: 'Tissus au mètre', imageUrl: 'https://picsum.photos/seed/tissu/100/100', category: "Tissus & Linge" },
+  { id: 'drap', name: 'Draps', imageUrl: 'https://picsum.photos/seed/drap/100/100', category: "Tissus & Linge" },
+  { id: 'serviette', name: 'Serviettes', imageUrl: 'https://picsum.photos/seed/serviette/100/100', category: "Tissus & Linge" },
 ];
 
 export function OrderForm() {
@@ -219,7 +217,7 @@ export function OrderForm() {
         ...orderData,
         userId: userId,
         status: "En cours de traitement",
-        items: data.items.filter(item => item.quantity > 0).map(({icon, ...rest}) => rest), // Don't store icon component
+        items: data.items.filter(item => item.quantity > 0).map(({...rest}) => rest),
         createdAt: serverTimestamp(),
       };
 
@@ -383,9 +381,15 @@ function StepTwoContent({ form }: { form: any }) {
                             {items.map((item: any, index: number) => {
                                 if (item.category !== category) return null;
                                 return (
-                                    <div key={item.id} className="border rounded-lg p-3 flex flex-col items-center justify-between">
+                                    <div key={item.id} className="border rounded-lg p-3 flex flex-col items-center justify-between group">
                                         <div className="text-center">
-                                            <item.icon className="w-10 h-10 mx-auto mb-2 text-primary" />
+                                             <Image 
+                                                src={item.imageUrl} 
+                                                alt={item.name}
+                                                width={80}
+                                                height={80}
+                                                className="w-20 h-20 object-cover rounded-md mx-auto mb-2 transition-transform duration-300 group-hover:scale-110"
+                                            />
                                             <p className="text-sm font-medium">{item.name}</p>
                                         </div>
                                         <div className="flex items-center justify-center gap-2 mt-3">
@@ -479,5 +483,3 @@ function StepFourContent({ values }: { values: FormValues }) {
     </motion.div>
   );
 }
-
-    
