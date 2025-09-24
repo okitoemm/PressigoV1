@@ -2,6 +2,7 @@
 "use client";
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -33,9 +34,14 @@ export function Header() {
   return (
     <header className="bg-card/80 backdrop-blur-lg sticky top-0 z-40 border-b">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
-        <Link href="/" className="flex items-center gap-2 font-bold text-xl text-primary">
-          <WashingMachine className="h-7 w-7 text-primary" />
-          <span className="font-headline">LAVOO express</span>
+        <Link href="/" className="flex items-center gap-2 text-primary">
+            <Image
+                src="/logo.png"
+                alt="LAVOO Express Logo"
+                width={140}
+                height={40}
+                priority
+            />
         </Link>
 
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
@@ -78,9 +84,14 @@ export function Header() {
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px] sm:w-[400px]">
               <div className="p-6">
-                <Link href="/" className="flex items-center gap-2 mb-8 font-bold text-xl text-primary">
-                  <WashingMachine className="h-7 w-7 text-primary" />
-                  <span className="font-headline">LAVOO Express</span>
+                <Link href="/" className="flex items-center gap-2 mb-8 text-primary">
+                   <Image
+                        src="/logo.png"
+                        alt="LAVOO Express Logo"
+                        width={140}
+                        height={40}
+                        priority
+                    />
                 </Link>
                 <nav className="flex flex-col gap-6 text-lg font-medium">
                   {navLinks.map((link) => (
