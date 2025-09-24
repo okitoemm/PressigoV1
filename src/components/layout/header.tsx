@@ -36,7 +36,7 @@ export function Header() {
       <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
         <Link href="/" className="flex items-center gap-2 text-primary">
             <Image
-                src="/logo.png"
+                src="/images/logos/logo2.png"
                 alt="LAVOO Express Logo"
                 width={140}
                 height={40}

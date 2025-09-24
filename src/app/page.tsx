@@ -1,4 +1,5 @@
 
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Sparkles, Truck, CheckCircle, PlayCircle } from 'lucide-react';
 import Link from 'next/link';
@@ -11,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { ReviewCarousel } from '@/components/review-carousel';
 import Image from 'next/image';
 import { UserShowcase } from '@/components/user-showcase';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 export default function Home() {
   return (
@@ -206,6 +208,46 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="py-16 md:py-24 bg-white">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-headline font-bold text-center mb-12">Questions fréquentes</h2>
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="item-1">
+                <AccordionTrigger>Quels sont vos délais de livraison ?</AccordionTrigger>
+                <AccordionContent>
+                  Nous garantissons une livraison en 24h chrono. Collecte aujourd'hui, livraison demain ! Pour les demandes spécifiques comme le nettoyage de tapis, le délai peut être légèrement plus long.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-2">
+                <AccordionTrigger>Quelles zones desservez-vous ?</AccordionTrigger>
+                <AccordionContent>
+                  Nous desservons actuellement les arrondissements de Paris de 75001 à 75008. Vous pouvez vérifier votre code postal sur notre page d'accueil pour confirmer votre éligibilité. Nous étendons notre zone de service régulièrement !
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-3">
+                <AccordionTrigger>Comment dois-je préparer mon linge pour la collecte ?</AccordionTrigger>
+                <AccordionContent>
+                  Rassemblez simplement votre linge dans un sac. Il n'est pas nécessaire de trier, nos experts s'en chargent pour vous. Si vous avez des articles pour le nettoyage à sec, merci de les séparer dans un sac distinct.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-4">
+                <AccordionTrigger>Que se passe-t-il si un vêtement est endommagé ?</AccordionTrigger>
+                <AccordionContent>
+                  La qualité est notre priorité. Chaque article est inspecté à la réception. En cas de dommage de notre fait, nous nous engageons à vous dédommager selon nos conditions générales de vente.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-5">
+                <AccordionTrigger>Proposez-vous des services pour les entreprises ?</AccordionTrigger>
+                <AccordionContent>
+                  Oui, absolument ! Nous avons des offres dédiées aux professionnels (hôtels, restaurants, conciergeries, etc.). Visitez notre section "Services Pro" ou contactez-nous pour un devis sur mesure.
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </div>
+        </div>
+      </section>
+
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-4 md:px-6">
           <div className="text-center">
@@ -222,3 +264,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
