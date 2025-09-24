@@ -35,10 +35,11 @@ import { TShirtIcon } from "@/components/icons/t-shirt-icon";
 import { TrousersIcon } from "@/components/icons/trousers-icon";
 import { JacketIcon } from "@/components/icons/jacket-icon";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Terminal, Eye, EyeOff, Loader2 } from "lucide-react";
+import { Terminal, Eye, EyeOff, Loader2, Shirt, Redo, Undo, Diamond, Milestone, Hand, Wind } from "lucide-react";
 import { auth, db } from "@/lib/firebase/client-app";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { Separator } from "./ui/separator";
 
 const stepOneSchema = z.object({
   name: z.string().min(2, { message: "Le nom est requis." }),
@@ -64,6 +65,7 @@ const stepTwoSchema = z.object({
     name: z.string(),
     icon: z.any(),
     quantity: z.number().min(0),
+    category: z.string(),
   })).refine(items => items.some(item => item.quantity > 0), { message: "Veuillez sélectionner au moins un article." }),
   stainRemoval: z.boolean().default(false),
   delicateWash: z.boolean().default(false),
@@ -96,9 +98,28 @@ const availableTimeSlots = ["09:00 - 11:00", "11:00 - 13:00", "14:00 - 16:00", "
 const validZipCodes = ["75001", "75002", "75003", "75004", "75005", "75006", "75007", "75008"];
 
 const clothingItems = [
-  { id: 'tshirt', name: 'T-Shirts', icon: TShirtIcon },
-  { id: 'trousers', name: 'Pantalons', icon: TrousersIcon },
-  { id: 'jacket', name: 'Vestes', icon: JacketIcon },
+  // Hauts
+  { id: 'tshirt', name: 'T-Shirts', icon: TShirtIcon, category: "Hauts" },
+  { id: 'chemise', name: 'Chemises', icon: Shirt, category: "Hauts" },
+  { id: 'blouse', name: 'Blouses', icon: Hand, category: "Hauts" }, // Placeholder icon
+  { id: 'pull', name: 'Pulls', icon: Wind, category: "Hauts" }, // Placeholder icon
+  // Bas
+  { id: 'jeans', name: 'Jeans', icon: TrousersIcon, category: "Bas" },
+  { id: 'trousers', name: 'Pantalons', icon: TrousersIcon, category: "Bas" },
+  { id: 'short', name: 'Shorts', icon: TrousersIcon, category: "Bas" },
+  { id: 'jupe', name: 'Jupes', icon: Redo, category: "Bas" }, // Placeholder icon
+  // Pièces Uniques
+  { id: 'robe_simple', name: 'Robe Simple', icon: Undo, category: "Pièces Uniques" }, // Placeholder icon
+  { id: 'robe_speciale', name: 'Robe (avec pierres)', icon: Diamond, category: "Pièces Uniques" },
+  { id: 'costume', name: 'Costumes', icon: Milestone, category: "Pièces Uniques" }, // Placeholder icon
+  // Vestes & Manteaux
+  { id: 'jacket', name: 'Vestes', icon: JacketIcon, category: "Vestes & Manteaux" },
+  { id: 'blouson', name: 'Blousons', icon: JacketIcon, category: "Vestes & Manteaux" },
+  { id: 'manteau', name: 'Manteaux', icon: JacketIcon, category: "Vestes & Manteaux" },
+  // Tissus
+  { id: 'tissu', name: 'Tissus au mètre', icon: Shirt, category: "Tissus & Linge" },
+  { id: 'drap', name: 'Draps', icon: Shirt, category: "Tissus & Linge" },
+  { id: 'serviette', name: 'Serviettes', icon: Shirt, category: "Tissus & Linge" },
 ];
 
 export function OrderForm() {
@@ -330,55 +351,79 @@ function StepOneContent({ form }: { form: any }) {
 }
 
 function StepTwoContent({ form }: { form: any }) {
-  const { control, watch, setValue, formState: { errors } } = form;
-  const items = watch("items");
+    const { control, watch, setValue, formState: { errors } } = form;
+    const items = watch("items");
 
-  const updateQuantity = (index: number, delta: number) => {
-    const currentQuantity = items[index].quantity;
-    const newQuantity = Math.max(0, currentQuantity + delta);
-    setValue(`items.${index}.quantity`, newQuantity, { shouldValidate: true });
-  };
-  
-  return (
-    <motion.div {...motionProps} className="space-y-6">
-      <div>
-        <h3 className="text-xl font-semibold">Vos vêtements</h3>
-        <p className="text-sm text-muted-foreground">Indiquez la quantité pour chaque type d'article.</p>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {items.map((item: any, index: number) => (
-          <Card key={item.id} className="text-center p-4">
-            <item.icon className="w-12 h-12 mx-auto mb-2 text-primary" />
-            <h4 className="font-semibold">{item.name}</h4>
-            <div className="flex items-center justify-center gap-2 mt-2">
-              <Button type="button" size="icon" variant="outline" onClick={() => updateQuantity(index, -1)}>-</Button>
-              <span className="w-10 text-center font-bold">{item.quantity}</span>
-              <Button type="button" size="icon" variant="outline" onClick={() => updateQuantity(index, 1)}>+</Button>
+    const updateQuantity = (index: number, delta: number) => {
+        const currentQuantity = items[index].quantity;
+        const newQuantity = Math.max(0, currentQuantity + delta);
+        setValue(`items.${index}.quantity`, newQuantity, { shouldValidate: true });
+    };
+
+    const categories = clothingItems.reduce((acc, item) => {
+        if (!acc[item.category]) {
+            acc[item.category] = [];
+        }
+        acc[item.category].push(item);
+        return acc;
+    }, {} as Record<string, typeof clothingItems>);
+
+    return (
+        <motion.div {...motionProps} className="space-y-6">
+            <div>
+                <h3 className="text-xl font-semibold">Vos vêtements</h3>
+                <p className="text-sm text-muted-foreground">Indiquez la quantité pour chaque type d'article.</p>
             </div>
-          </Card>
-        ))}
-      </div>
-       {errors.items && <p className="text-sm font-medium text-destructive">{errors.items.message as string}</p>}
-      
-      <div>
-        <h3 className="text-xl font-semibold">Demandes spéciales</h3>
-        <div className="space-y-2 mt-2">
-            <FormField control={control} name="stainRemoval" render={({ field }) => (
-                <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4"><FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl><div className="space-y-1 leading-none"><FormLabel>Traitement des taches</FormLabel></div></FormItem>
+
+            <div className="space-y-6">
+                {Object.entries(categories).map(([category, itemsInCategory]) => (
+                    <div key={category}>
+                        <h4 className="text-lg font-medium mb-3">{category}</h4>
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            {items.map((item: any, index: number) => {
+                                if (item.category !== category) return null;
+                                return (
+                                    <div key={item.id} className="border rounded-lg p-3 flex flex-col items-center justify-between">
+                                        <div className="text-center">
+                                            <item.icon className="w-10 h-10 mx-auto mb-2 text-primary" />
+                                            <p className="text-sm font-medium">{item.name}</p>
+                                        </div>
+                                        <div className="flex items-center justify-center gap-2 mt-3">
+                                            <Button type="button" size="icon" variant="outline" className="h-7 w-7" onClick={() => updateQuantity(index, -1)}>-</Button>
+                                            <span className="w-8 text-center font-bold text-sm">{item.quantity}</span>
+                                            <Button type="button" size="icon" variant="outline" className="h-7 w-7" onClick={() => updateQuantity(index, 1)}>+</Button>
+                                        </div>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {errors.items && <p className="text-sm font-medium text-destructive">{errors.items.message as string}</p>}
+            
+            <Separator />
+
+            <div>
+                <h3 className="text-xl font-semibold">Demandes spéciales</h3>
+                <div className="space-y-2 mt-2">
+                    <FormField control={control} name="stainRemoval" render={({ field }) => (
+                        <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4"><FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl><div className="space-y-1 leading-none"><FormLabel>Traitement des taches</FormLabel></div></FormItem>
+                    )} />
+                    <FormField control={control} name="delicateWash" render={({ field }) => (
+                        <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4"><FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl><div className="space-y-1 leading-none"><FormLabel>Lavage délicat</FormLabel></div></FormItem>
+                    )} />
+                </div>
+            </div>
+            <FormField control={control} name="specialInstructions" render={({ field }) => (
+                <FormItem>
+                <FormLabel>Instructions supplémentaires (optionnel)</FormLabel>
+                <FormControl><Textarea placeholder="Ex: Chemise blanche à laver séparément..." {...field} /></FormControl>
+                </FormItem>
             )} />
-            <FormField control={control} name="delicateWash" render={({ field }) => (
-                <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4"><FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl><div className="space-y-1 leading-none"><FormLabel>Lavage délicat</FormLabel></div></FormItem>
-            )} />
-        </div>
-      </div>
-      <FormField control={control} name="specialInstructions" render={({ field }) => (
-        <FormItem>
-          <FormLabel>Instructions supplémentaires (optionnel)</FormLabel>
-          <FormControl><Textarea placeholder="Ex: Chemise blanche à laver séparément..." {...field} /></FormControl>
-        </FormItem>
-      )} />
-    </motion.div>
-  );
+        </motion.div>
+    );
 }
 
 function StepThreeContent({ form }: { form: any }) {
