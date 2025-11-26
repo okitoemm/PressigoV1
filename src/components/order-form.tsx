@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -46,6 +46,7 @@ const stepOneSchema = z.object({
     imageUrl: z.string(),
     quantity: z.number().min(0),
     category: z.string(),
+    price: z.number(),
   })).refine(items => items.some(item => item.quantity > 0), { message: "Veuillez sélectionner au moins un article." }),
   stainRemoval: z.boolean().default(false),
   delicateWash: z.boolean().default(false),
@@ -98,27 +99,27 @@ const validZipCodes = ["75001", "75002", "75003", "75004", "75005", "75006", "75
 
 const clothingItems = [
   // Hauts
-  { id: 'tshirt', name: 'T-Shirts', imageUrl: 'https://picsum.photos/seed/tshirt/100/100', category: "Hauts" },
-  { id: 'chemise', name: 'Chemises', imageUrl: 'https://picsum.photos/seed/chemise/100/100', category: "Hauts" },
-  { id: 'blouse', name: 'Blouses', imageUrl: 'https://picsum.photos/seed/blouse/100/100', category: "Hauts" },
-  { id: 'pull', name: 'Pulls', imageUrl: 'https://picsum.photos/seed/pull/100/100', category: "Hauts" },
+  { id: 'tshirt', name: 'T-Shirts', imageUrl: 'https://picsum.photos/seed/tshirt/100/100', category: "Hauts", price: 3.50 },
+  { id: 'chemise', name: 'Chemises', imageUrl: 'https://picsum.photos/seed/chemise/100/100', category: "Hauts", price: 4.00 },
+  { id: 'blouse', name: 'Blouses', imageUrl: 'https://picsum.photos/seed/blouse/100/100', category: "Hauts", price: 4.50 },
+  { id: 'pull', name: 'Pulls', imageUrl: 'https://picsum.photos/seed/pull/100/100', category: "Hauts", price: 5.00 },
   // Bas
-  { id: 'jeans', name: 'Jeans', imageUrl: 'https://picsum.photos/seed/jeans/100/100', category: "Bas" },
-  { id: 'trousers', name: 'Pantalons', imageUrl: 'https://picsum.photos/seed/trousers/100/100', category: "Bas" },
-  { id: 'short', name: 'Shorts', imageUrl: 'https://picsum.photos/seed/short/100/100', category: "Bas" },
-  { id: 'jupe', name: 'Jupes', imageUrl: 'https://picsum.photos/seed/jupe/100/100', category: "Bas" },
+  { id: 'jeans', name: 'Jeans', imageUrl: 'https://picsum.photos/seed/jeans/100/100', category: "Bas", price: 6.00 },
+  { id: 'trousers', name: 'Pantalons', imageUrl: 'https://picsum.photos/seed/trousers/100/100', category: "Bas", price: 5.50 },
+  { id: 'short', name: 'Shorts', imageUrl: 'https://picsum.photos/seed/short/100/100', category: "Bas", price: 4.00 },
+  { id: 'jupe', name: 'Jupes', imageUrl: 'https://picsum.photos/seed/jupe/100/100', category: "Bas", price: 4.50 },
   // Pièces Uniques
-  { id: 'robe_simple', name: 'Robe Simple', imageUrl: 'https://picsum.photos/seed/robe_simple/100/100', category: "Pièces Uniques" },
-  { id: 'robe_speciale', name: 'Robe (soirée)', imageUrl: 'https://picsum.photos/seed/robe_speciale/100/100', category: "Pièces Uniques" },
-  { id: 'costume', name: 'Costumes', imageUrl: 'https://picsum.photos/seed/costume/100/100', category: "Pièces Uniques" },
+  { id: 'robe_simple', name: 'Robe Simple', imageUrl: 'https://picsum.photos/seed/robe_simple/100/100', category: "Pièces Uniques", price: 8.00 },
+  { id: 'robe_speciale', name: 'Robe (soirée)', imageUrl: 'https://picsum.photos/seed/robe_speciale/100/100', category: "Pièces Uniques", price: 12.00 },
+  { id: 'costume', name: 'Costumes', imageUrl: 'https://picsum.photos/seed/costume/100/100', category: "Pièces Uniques", price: 15.00 },
   // Vestes & Manteaux
-  { id: 'jacket', name: 'Vestes', imageUrl: 'https://picsum.photos/seed/jacket/100/100', category: "Vestes & Manteaux" },
-  { id: 'blouson', name: 'Blousons', imageUrl: 'https://picsum.photos/seed/blouson/100/100', category: "Vestes & Manteaux" },
-  { id: 'manteau', name: 'Manteaux', imageUrl: 'https://picsum.photos/seed/manteau/100/100', category: "Vestes & Manteaux" },
+  { id: 'jacket', name: 'Vestes', imageUrl: 'https://picsum.photos/seed/jacket/100/100', category: "Vestes & Manteaux", price: 9.00 },
+  { id: 'blouson', name: 'Blousons', imageUrl: 'https://picsum.photos/seed/blouson/100/100', category: "Vestes & Manteaux", price: 10.00 },
+  { id: 'manteau', name: 'Manteaux', imageUrl: 'https://picsum.photos/seed/manteau/100/100', category: "Vestes & Manteaux", price: 18.00 },
   // Tissus
-  { id: 'tissu', name: 'Tissus au mètre', imageUrl: 'https://picsum.photos/seed/tissu/100/100', category: "Tissus & Linge" },
-  { id: 'drap', name: 'Draps', imageUrl: 'https://picsum.photos/seed/drap/100/100', category: "Tissus & Linge" },
-  { id: 'serviette', name: 'Serviettes', imageUrl: 'https://picsum.photos/seed/serviette/100/100', category: "Tissus & Linge" },
+  { id: 'tissu', name: 'Tissus au mètre', imageUrl: 'https://picsum.photos/seed/tissu/100/100', category: "Tissus & Linge", price: 7.50 },
+  { id: 'drap', name: 'Draps', imageUrl: 'https://picsum.photos/seed/drap/100/100', category: "Tissus & Linge", price: 8.00 },
+  { id: 'serviette', name: 'Serviettes', imageUrl: 'https://picsum.photos/seed/serviette/100/100', category: "Tissus & Linge", price: 2.50 },
 ];
 
 export function OrderForm() {
@@ -176,6 +177,12 @@ export function OrderForm() {
 
   const handleBack = () => setStep((prev) => prev - 1);
   
+  const watchedItems = form.watch("items");
+  const totalPrice = useMemo(() => {
+    return watchedItems.reduce((total, item) => total + (item.quantity * item.price), 0);
+  }, [watchedItems]);
+
+
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
     toast({
@@ -219,6 +226,7 @@ export function OrderForm() {
         userId: userId,
         status: "En cours de traitement",
         items: data.items.filter(item => item.quantity > 0).map(({...rest}) => rest),
+        totalPrice: totalPrice,
         createdAt: serverTimestamp(),
       };
 
@@ -242,10 +250,10 @@ export function OrderForm() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <AnimatePresence mode="wait">
-              {step === 1 && <StepOneContent form={form} />}
+              {step === 1 && <StepOneContent form={form} totalPrice={totalPrice}/>}
               {step === 2 && <StepTwoContent form={form} />}
               {step === 3 && <StepThreeContent form={form} />}
-              {step === 4 && <StepFourContent values={form.getValues()} />}
+              {step === 4 && <StepFourContent values={form.getValues()} totalPrice={totalPrice} />}
             </AnimatePresence>
 
             <div className="flex justify-between items-center pt-4">
@@ -260,7 +268,7 @@ export function OrderForm() {
                 </Button>
               ) : (
                 <Button type="submit" disabled={isSubmitting}>
-                   {isSubmitting ? <Loader2 className="animate-spin" /> : 'Confirmer et commander'}
+                   {isSubmitting ? <Loader2 className="animate-spin" /> : `Confirmer et commander (${totalPrice.toFixed(2)} €)`}
                 </Button>
               )}
             </div>
@@ -278,7 +286,7 @@ const motionProps = {
   transition: { duration: 0.3 },
 };
 
-function StepOneContent({ form }: { form: any }) {
+function StepOneContent({ form, totalPrice }: { form: any, totalPrice: number }) {
     const { control, watch, setValue, formState: { errors } } = form;
     const items = watch("items");
 
@@ -321,6 +329,7 @@ function StepOneContent({ form }: { form: any }) {
                                                 className="w-20 h-20 object-cover rounded-md mx-auto mb-2 transition-transform duration-300 group-hover:scale-110"
                                             />
                                             <p className="text-sm font-medium">{item.name}</p>
+                                            <p className="text-xs text-muted-foreground">{item.price.toFixed(2)} € / pce</p>
                                         </div>
                                         <div className="flex items-center justify-center gap-2 mt-3">
                                             <Button type="button" size="icon" variant="outline" className="h-7 w-7" onClick={() => updateQuantity(index, -1)}>-</Button>
@@ -338,24 +347,33 @@ function StepOneContent({ form }: { form: any }) {
             {errors.items && <p className="text-sm font-medium text-destructive">{errors.items.message as string}</p>}
             
             <Separator />
+             <div className="space-y-4">
+                <div>
+                    <h3 className="text-xl font-semibold">Demandes spéciales</h3>
+                    <div className="space-y-2 mt-2">
+                        <FormField control={control} name="stainRemoval" render={({ field }) => (
+                            <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4"><FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl><div className="space-y-1 leading-none"><FormLabel>Traitement des taches (+5.00€)</FormLabel></div></FormItem>
+                        )} />
+                        <FormField control={control} name="delicateWash" render={({ field }) => (
+                            <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4"><FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl><div className="space-y-1 leading-none"><FormLabel>Lavage délicat (+3.00€)</FormLabel></div></FormItem>
+                        )} />
+                    </div>
+                </div>
+                <FormField control={control} name="specialInstructions" render={({ field }) => (
+                    <FormItem>
+                    <FormLabel>Instructions supplémentaires (optionnel)</FormLabel>
+                    <FormControl><Textarea placeholder="Ex: Chemise blanche à laver séparément..." {...field} /></FormControl>
+                    </FormItem>
+                )} />
+             </div>
 
-            <div>
-                <h3 className="text-xl font-semibold">Demandes spéciales</h3>
-                <div className="space-y-2 mt-2">
-                    <FormField control={control} name="stainRemoval" render={({ field }) => (
-                        <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4"><FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl><div className="space-y-1 leading-none"><FormLabel>Traitement des taches</FormLabel></div></FormItem>
-                    )} />
-                    <FormField control={control} name="delicateWash" render={({ field }) => (
-                        <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4"><FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl><div className="space-y-1 leading-none"><FormLabel>Lavage délicat</FormLabel></div></FormItem>
-                    )} />
+            <Separator />
+            <div className="flex justify-end items-center">
+                <div className="text-right">
+                    <p className="text-muted-foreground">Total estimé</p>
+                    <p className="text-2xl font-bold">{totalPrice.toFixed(2)} €</p>
                 </div>
             </div>
-            <FormField control={control} name="specialInstructions" render={({ field }) => (
-                <FormItem>
-                <FormLabel>Instructions supplémentaires (optionnel)</FormLabel>
-                <FormControl><Textarea placeholder="Ex: Chemise blanche à laver séparément..." {...field} /></FormControl>
-                </FormItem>
-            )} />
         </motion.div>
     );
 }
@@ -460,7 +478,7 @@ function StepThreeContent({ form }: { form: any }) {
   );
 }
 
-function StepFourContent({ values }: { values: FormValues }) {
+function StepFourContent({ values, totalPrice }: { values: FormValues, totalPrice: number }) {
   const totalItems = values.items.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
@@ -475,8 +493,16 @@ function StepFourContent({ values }: { values: FormValues }) {
       </Alert>
       <div className="space-y-4 rounded-md border p-4 bg-secondary/50">
         <div><h4 className="font-semibold">Articles ({totalItems})</h4>
-          <ul className="list-disc list-inside text-sm text-muted-foreground">{values.items.filter(i => i.quantity > 0).map(item => (<li key={item.id}>{item.name}: {item.quantity}</li>))}</ul>
+          <ul className="list-disc list-inside text-sm text-muted-foreground">{values.items.filter(i => i.quantity > 0).map(item => (<li key={item.id}>{item.name}: {item.quantity} x {item.price.toFixed(2)} €</li>))}</ul>
         </div>
+        {values.stainRemoval && <div className="text-sm text-muted-foreground">Traitement des taches : +5.00 €</div>}
+        {values.delicateWash && <div className="text-sm text-muted-foreground">Lavage délicat : +3.00 €</div>}
+        <Separator />
+        <div className="flex justify-between items-center font-bold">
+            <p>Total à payer</p>
+            <p>{totalPrice.toFixed(2)} €</p>
+        </div>
+         <Separator />
         <div><h4 className="font-semibold">Collecte</h4><p className="text-sm text-muted-foreground">{values.pickupDate?.toLocaleDateString('fr-FR')} à {values.pickupSlot}</p></div>
         <div><h4 className="font-semibold">Livraison</h4><p className="text-sm text-muted-foreground">{values.deliveryDate?.toLocaleDateString('fr-FR')} à {values.deliverySlot}</p></div>
         <div><h4 className="font-semibold">Informations</h4><p className="text-sm text-muted-foreground">{values.name} | {values.email} | {values.phone}</p><p className="text-sm text-muted-foreground">{values.address}, {values.zipCode}</p></div>
@@ -484,3 +510,6 @@ function StepFourContent({ values }: { values: FormValues }) {
     </motion.div>
   );
 }
+
+
+    
