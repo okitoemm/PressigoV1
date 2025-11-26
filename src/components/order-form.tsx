@@ -99,27 +99,27 @@ const validZipCodes = ["75001", "75002", "75003", "75004", "75005", "75006", "75
 
 const clothingItems = [
   // Hauts
-  { id: 'tshirt', name: 'T-Shirts', imageUrl: '/images/IconVetements/tshirt.png', category: "Hauts", price: 3.50 },
-  { id: 'chemise', name: 'Chemises', imageUrl: '/images/IconVetements/chemise.png', category: "Hauts", price: 4.00 },
-  { id: 'blouse', name: 'Blouses', imageUrl: '/images/IconVetements/blouse.png', category: "Hauts", price: 4.50 },
-  { id: 'pull', name: 'Pulls', imageUrl: '/images/IconVetements/pull.png', category: "Hauts", price: 5.00 },
+  { id: 'tshirt', name: 'T-Shirts', imageUrl: '/images/IconVetements/T-Shirts.png', category: "Hauts", price: 3.50 },
+  { id: 'chemise', name: 'Chemises', imageUrl: '/images/IconVetements/Chemises.png', category: "Hauts", price: 4.00 },
+  { id: 'blouse', name: 'Blouses', imageUrl: '/images/IconVetements/Blouses.png', category: "Hauts", price: 4.50 },
+  { id: 'pull', name: 'Pulls', imageUrl: '/images/IconVetements/Pulls.png', category: "Hauts", price: 5.00 },
   // Bas
-  { id: 'jeans', name: 'Jeans', imageUrl: '/images/IconVetements/jeans.png', category: "Bas", price: 6.00 },
-  { id: 'trousers', name: 'Pantalons', imageUrl: '/images/IconVetements/trousers.png', category: "Bas", price: 5.50 },
-  { id: 'short', name: 'Shorts', imageUrl: '/images/IconVetements/short.png', category: "Bas", price: 4.00 },
-  { id: 'jupe', name: 'Jupes', imageUrl: '/images/IconVetements/jupe.png', category: "Bas", price: 4.50 },
+  { id: 'jeans', name: 'Jeans', imageUrl: '/images/IconVetements/Jeans.png', category: "Bas", price: 6.00 },
+  { id: 'trousers', name: 'Pantalons', imageUrl: '/images/IconVetements/Pantalons.png', category: "Bas", price: 5.50 },
+  { id: 'short', name: 'Shorts', imageUrl: '/images/IconVetements/Shorts.png', category: "Bas", price: 4.00 },
+  { id: 'jupe', name: 'Jupes', imageUrl: '/images/IconVetements/Jupes.png', category: "Bas", price: 4.50 },
   // Pièces Uniques
-  { id: 'robe_simple', name: 'Robe Simple', imageUrl: '/images/IconVetements/robe_simple.png', category: "Pièces Uniques", price: 8.00 },
-  { id: 'robe_speciale', name: 'Robe (soirée)', imageUrl: '/images/IconVetements/robe_speciale.png', category: "Pièces Uniques", price: 12.00 },
-  { id: 'costume', name: 'Costumes', imageUrl: '/images/IconVetements/costume.png', category: "Pièces Uniques", price: 15.00 },
+  { id: 'robe_simple', name: 'Robe Simple', imageUrl: '/images/IconVetements/RobeSimple.png', category: "Pièces Uniques", price: 8.00 },
+  { id: 'robe_speciale', name: 'Robe (soirée)', imageUrl: '/images/IconVetements/RobeSoirée.png', category: "Pièces Uniques", price: 12.00 },
+  { id: 'costume', name: 'Costumes', imageUrl: '/images/IconVetements/Costumes.png', category: "Pièces Uniques", price: 15.00 },
   // Vestes & Manteaux
-  { id: 'jacket', name: 'Vestes', imageUrl: '/images/IconVetements/jacket.png', category: "Vestes & Manteaux", price: 9.00 },
-  { id: 'blouson', name: 'Blousons', imageUrl: '/images/IconVetements/blouson.png', category: "Vestes & Manteaux", price: 10.00 },
-  { id: 'manteau', name: 'Manteaux', imageUrl: '/images/IconVetements/manteau.png', category: "Vestes & Manteaux", price: 18.00 },
+  { id: 'jacket', name: 'Vestes', imageUrl: '/images/IconVetements/Jackets.png', category: "Vestes & Manteaux", price: 9.00 },
+  { id: 'blouson', name: 'Blousons', imageUrl: '/images/IconVetements/Blousons.png', category: "Vestes & Manteaux", price: 10.00 },
+  { id: 'manteau', name: 'Manteaux', imageUrl: '/images/IconVetements/Manteaux.png', category: "Vestes & Manteaux", price: 18.00 },
   // Tissus
-  { id: 'tissu', name: 'Tissus au mètre', imageUrl: '/images/IconVetements/tissu.png', category: "Tissus & Linge", price: 7.50 },
-  { id: 'drap', name: 'Draps', imageUrl: '/images/IconVetements/drap.png', category: "Tissus & Linge", price: 8.00 },
-  { id: 'serviette', name: 'Serviettes', imageUrl: '/images/IconVetements/serviette.png', category: "Tissus & Linge", price: 2.50 },
+  { id: 'tissu', name: 'Tissus au mètre', imageUrl: '/images/IconVetements/Tissusaumetre.png', category: "Tissus & Linge", price: 7.50 },
+  { id: 'drap', name: 'Draps', imageUrl: '/images/IconVetements/Draps.png', category: "Tissus & Linge", price: 8.00 },
+  { id: 'serviette', name: 'Serviettes', imageUrl: '/images/IconVetements/Serviettes.png', category: "Tissus & Linge", price: 2.50 },
 ];
 
 export function OrderForm() {
@@ -177,10 +177,13 @@ export function OrderForm() {
 
   const handleBack = () => setStep((prev) => prev - 1);
   
-  const watchedItems = form.watch("items");
+  const watchedFormValues = form.watch();
   const totalPrice = useMemo(() => {
-    return watchedItems.reduce((total, item) => total + (item.quantity * item.price), 0);
-  }, [watchedItems]);
+    const itemsTotal = watchedFormValues.items.reduce((total, item) => total + (item.quantity * item.price), 0);
+    const stainRemovalCost = watchedFormValues.stainRemoval ? 5 : 0;
+    const delicateWashCost = watchedFormValues.delicateWash ? 3 : 0;
+    return itemsTotal + stainRemovalCost + delicateWashCost;
+  }, [watchedFormValues]);
 
 
   const onSubmit = async (data: FormValues) => {
@@ -218,6 +221,8 @@ export function OrderForm() {
         // router.push('/login'); 
         return;
       }
+      
+      const finalTotalPrice = totalPrice;
 
       // Save order to Firestore
       const { createAccount, password, ...orderData } = data;
@@ -226,7 +231,7 @@ export function OrderForm() {
         userId: userId,
         status: "En cours de traitement",
         items: data.items.filter(item => item.quantity > 0).map(({...rest}) => rest),
-        totalPrice: totalPrice,
+        totalPrice: finalTotalPrice,
         createdAt: serverTimestamp(),
       };
 
@@ -510,3 +515,5 @@ function StepFourContent({ values, totalPrice }: { values: FormValues, totalPric
     </motion.div>
   );
 }
+
+    
