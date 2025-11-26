@@ -83,12 +83,11 @@ const stepThreeSchema = z.object({
 const formSchema = z.intersection(z.intersection(stepOneSchema, stepTwoSchema), stepThreeSchema)
   .refine(data => {
     if (data.pickupDate && data.deliveryDate) {
-        return data.deliveryDate > data.pickupDate;
+        // This validation is tricky in a multi-step form. 
+        // We will perform it before final submission.
+        return true; 
     }
     return true;
-  }, {
-    message: "La date de livraison doit être postérieure à la date de collecte.",
-    path: ["deliveryDate"],
   });
 
 
@@ -148,7 +147,7 @@ export function OrderForm() {
 
   const handleNext = async () => {
     let fieldsToValidate: (keyof FormValues)[] = [];
-    if (step === 1) fieldsToValidate = ["items"];
+    if (step === 1) fieldsToValidate = ["items", "stainRemoval", "delicateWash"];
     if (step === 2) fieldsToValidate = ["pickupDate", "pickupSlot", "deliveryDate", "deliverySlot"];
     if (step === 3) {
       fieldsToValidate = ["name", "email", "phone", "address", "zipCode"];
@@ -160,6 +159,13 @@ export function OrderForm() {
     const isValid = await form.trigger(fieldsToValidate);
 
     if (isValid) {
+       if (step === 2) {
+          const { pickupDate, deliveryDate } = form.getValues();
+            if (deliveryDate <= pickupDate) {
+                form.setError("deliveryDate", { type: "manual", message: "La date de livraison doit être postérieure à la date de collecte." });
+                return;
+            }
+       }
        if (step === 3) {
         const zipCode = form.getValues("zipCode");
         if (!validZipCodes.includes(zipCode)) {
@@ -183,7 +189,7 @@ export function OrderForm() {
     const stainRemovalCost = watchedFormValues.stainRemoval ? 5 : 0;
     const delicateWashCost = watchedFormValues.delicateWash ? 3 : 0;
     return itemsTotal + stainRemovalCost + delicateWashCost;
-  }, [watchedFormValues]);
+  }, [watchedFormValues.items, watchedFormValues.stainRemoval, watchedFormValues.delicateWash]);
 
 
   const onSubmit = async (data: FormValues) => {
@@ -384,28 +390,29 @@ function StepOneContent({ form, totalPrice }: { form: any, totalPrice: number })
 }
 
 function StepTwoContent({ form }: { form: any }) {
+  const { control, getValues } = form;
   return (
     <motion.div {...motionProps} className="space-y-6">
       <h3 className="text-xl font-semibold">Étape 2: Planification</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="space-y-4">
-            <FormField control={form.control} name="pickupDate" render={({ field }) => (
+            <FormField control={control} name="pickupDate" render={({ field }) => (
             <FormItem className="flex flex-col items-center"><FormLabel className="font-semibold text-center w-full mb-2">Date de collecte</FormLabel><FormControl><Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < new Date(new Date().setDate(new Date().getDate() - 1))} /></FormControl><FormMessage /></FormItem>
             )} />
-            <FormField control={form.control} name="pickupSlot" render={({ field }) => (
+            <FormField control={control} name="pickupSlot" render={({ field }) => (
             <FormItem><FormLabel>Créneau de collecte</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Choisissez un créneau" /></SelectTrigger></FormControl><SelectContent>{availableTimeSlots.map(slot => <SelectItem key={slot} value={slot}>{slot}</SelectItem>)}</SelectContent></Select><FormMessage /></FormItem>
             )} />
         </div>
         <div className="space-y-4">
-             <FormField control={form.control} name="deliveryDate" render={({ field }) => (
-            <FormItem className="flex flex-col items-center"><FormLabel className="font-semibold text-center w-full mb-2">Date de livraison</FormLabel><FormControl><Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < (form.getValues("pickupDate") || new Date())} /></FormControl><FormMessage /></FormItem>
+             <FormField control={control} name="deliveryDate" render={({ field }) => (
+            <FormItem className="flex flex-col items-center"><FormLabel className="font-semibold text-center w-full mb-2">Date de livraison</FormLabel><FormControl><Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < (getValues("pickupDate") || new Date(new Date().setDate(new Date().getDate() - 1)))} /></FormControl><FormMessage /></FormItem>
             )} />
-            <FormField control={form.control} name="deliverySlot" render={({ field }) => (
+            <FormField control={control} name="deliverySlot" render={({ field }) => (
             <FormItem><FormLabel>Créneau de livraison</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Choisissez un créneau" /></SelectTrigger></FormControl><SelectContent>{availableTimeSlots.map(slot => <SelectItem key={slot} value={slot}>{slot}</SelectItem>)}</SelectContent></Select><FormMessage /></FormItem>
             )} />
         </div>
       </div>
-      <FormField control={form.control} name="whatsappConfirm" render={({ field }) => (
+      <FormField control={control} name="whatsappConfirm" render={({ field }) => (
         <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4"><FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl><div className="space-y-1 leading-none"><FormLabel>Recevoir les notifications par WhatsApp</FormLabel></div></FormItem>
       )} />
     </motion.div>
