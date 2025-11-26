@@ -99,27 +99,27 @@ const validZipCodes = ["75001", "75002", "75003", "75004", "75005", "75006", "75
 
 const clothingItems = [
   // Hauts
-  { id: 'tshirt', name: 'T-Shirts', imageUrl: 'https://picsum.photos/seed/tshirt/100/100', category: "Hauts", price: 3.50 },
-  { id: 'chemise', name: 'Chemises', imageUrl: 'https://picsum.photos/seed/chemise/100/100', category: "Hauts", price: 4.00 },
-  { id: 'blouse', name: 'Blouses', imageUrl: 'https://picsum.photos/seed/blouse/100/100', category: "Hauts", price: 4.50 },
-  { id: 'pull', name: 'Pulls', imageUrl: 'https://picsum.photos/seed/pull/100/100', category: "Hauts", price: 5.00 },
+  { id: 'tshirt', name: 'T-Shirts', imageUrl: '/images/IconVetements/tshirt.png', category: "Hauts", price: 3.50 },
+  { id: 'chemise', name: 'Chemises', imageUrl: '/images/IconVetements/chemise.png', category: "Hauts", price: 4.00 },
+  { id: 'blouse', name: 'Blouses', imageUrl: '/images/IconVetements/blouse.png', category: "Hauts", price: 4.50 },
+  { id: 'pull', name: 'Pulls', imageUrl: '/images/IconVetements/pull.png', category: "Hauts", price: 5.00 },
   // Bas
-  { id: 'jeans', name: 'Jeans', imageUrl: 'https://picsum.photos/seed/jeans/100/100', category: "Bas", price: 6.00 },
-  { id: 'trousers', name: 'Pantalons', imageUrl: 'https://picsum.photos/seed/trousers/100/100', category: "Bas", price: 5.50 },
-  { id: 'short', name: 'Shorts', imageUrl: 'https://picsum.photos/seed/short/100/100', category: "Bas", price: 4.00 },
-  { id: 'jupe', name: 'Jupes', imageUrl: 'https://picsum.photos/seed/jupe/100/100', category: "Bas", price: 4.50 },
+  { id: 'jeans', name: 'Jeans', imageUrl: '/images/IconVetements/jeans.png', category: "Bas", price: 6.00 },
+  { id: 'trousers', name: 'Pantalons', imageUrl: '/images/IconVetements/trousers.png', category: "Bas", price: 5.50 },
+  { id: 'short', name: 'Shorts', imageUrl: '/images/IconVetements/short.png', category: "Bas", price: 4.00 },
+  { id: 'jupe', name: 'Jupes', imageUrl: '/images/IconVetements/jupe.png', category: "Bas", price: 4.50 },
   // Pièces Uniques
-  { id: 'robe_simple', name: 'Robe Simple', imageUrl: 'https://picsum.photos/seed/robe_simple/100/100', category: "Pièces Uniques", price: 8.00 },
-  { id: 'robe_speciale', name: 'Robe (soirée)', imageUrl: 'https://picsum.photos/seed/robe_speciale/100/100', category: "Pièces Uniques", price: 12.00 },
-  { id: 'costume', name: 'Costumes', imageUrl: 'https://picsum.photos/seed/costume/100/100', category: "Pièces Uniques", price: 15.00 },
+  { id: 'robe_simple', name: 'Robe Simple', imageUrl: '/images/IconVetements/robe_simple.png', category: "Pièces Uniques", price: 8.00 },
+  { id: 'robe_speciale', name: 'Robe (soirée)', imageUrl: '/images/IconVetements/robe_speciale.png', category: "Pièces Uniques", price: 12.00 },
+  { id: 'costume', name: 'Costumes', imageUrl: '/images/IconVetements/costume.png', category: "Pièces Uniques", price: 15.00 },
   // Vestes & Manteaux
-  { id: 'jacket', name: 'Vestes', imageUrl: 'https://picsum.photos/seed/jacket/100/100', category: "Vestes & Manteaux", price: 9.00 },
-  { id: 'blouson', name: 'Blousons', imageUrl: 'https://picsum.photos/seed/blouson/100/100', category: "Vestes & Manteaux", price: 10.00 },
-  { id: 'manteau', name: 'Manteaux', imageUrl: 'https://picsum.photos/seed/manteau/100/100', category: "Vestes & Manteaux", price: 18.00 },
+  { id: 'jacket', name: 'Vestes', imageUrl: '/images/IconVetements/jacket.png', category: "Vestes & Manteaux", price: 9.00 },
+  { id: 'blouson', name: 'Blousons', imageUrl: '/images/IconVetements/blouson.png', category: "Vestes & Manteaux", price: 10.00 },
+  { id: 'manteau', name: 'Manteaux', imageUrl: '/images/IconVetements/manteau.png', category: "Vestes & Manteaux", price: 18.00 },
   // Tissus
-  { id: 'tissu', name: 'Tissus au mètre', imageUrl: 'https://picsum.photos/seed/tissu/100/100', category: "Tissus & Linge", price: 7.50 },
-  { id: 'drap', name: 'Draps', imageUrl: 'https://picsum.photos/seed/drap/100/100', category: "Tissus & Linge", price: 8.00 },
-  { id: 'serviette', name: 'Serviettes', imageUrl: 'https://picsum.photos/seed/serviette/100/100', category: "Tissus & Linge", price: 2.50 },
+  { id: 'tissu', name: 'Tissus au mètre', imageUrl: '/images/IconVetements/tissu.png', category: "Tissus & Linge", price: 7.50 },
+  { id: 'drap', name: 'Draps', imageUrl: '/images/IconVetements/drap.png', category: "Tissus & Linge", price: 8.00 },
+  { id: 'serviette', name: 'Serviettes', imageUrl: '/images/IconVetements/serviette.png', category: "Tissus & Linge", price: 2.50 },
 ];
 
 export function OrderForm() {
@@ -510,6 +510,3 @@ function StepFourContent({ values, totalPrice }: { values: FormValues, totalPric
     </motion.div>
   );
 }
-
-
-    
